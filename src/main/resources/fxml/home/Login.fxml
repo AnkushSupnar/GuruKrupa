@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="660.0" prefWidth="1263.0" stylesheets="@../css/login.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ankush.controller.home.LoginController">
+   <children>
+      <StackPane fx:id="loginBox" layoutX="233.0" layoutY="180.0" prefHeight="438.0" prefWidth="391.0" styleClass="box" stylesheets="@../css/login.css">
+         <children>
+            <StackPane prefHeight="307.0" prefWidth="100.0" styleClass="circle" StackPane.alignment="TOP_CENTER">
+               <children>
+                  <FontAwesomeIcon fill="WHITE" glyphName="DIAMOND" size="8em" StackPane.alignment="CENTER">
+                     <StackPane.margin>
+                        <Insets top="10.0" />
+                     </StackPane.margin>
+                  </FontAwesomeIcon>
+               </children>
+               <StackPane.margin>
+                  <Insets bottom="370.0" left="110.0" right="110.0" top="-100.0" />
+               </StackPane.margin>
+            </StackPane>
+            <Text fill="#5bc0de" strokeType="OUTSIDE" strokeWidth="0.0" text="LOGIN" StackPane.alignment="TOP_CENTER">
+               <StackPane.margin>
+                  <Insets bottom="10.0" top="80.0" />
+               </StackPane.margin>
+               <font>
+                  <Font name="Georgia Bold" size="20.0" />
+               </font>
+            </Text>
+            <Pane StackPane.alignment="CENTER">
+               <padding>
+                  <Insets bottom="10.0" top="100.0" />
+               </padding>
+               <StackPane.margin>
+                  <Insets top="120.0" />
+               </StackPane.margin>
+               <children>
+                  <VBox layoutX="83.0" layoutY="21.0" prefHeight="226.0" prefWidth="229.0" style="-fx-background-color: white;">
+                     <children>
+                        <Label text="USER NAME" textFill="#5bc0de">
+                           <font>
+                              <Font name="Georgia" size="16.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </Label>
+                        <ComboBox fx:id="cmbUserName" prefHeight="30.0" prefWidth="236.0">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </ComboBox>
+                        <Label text="PASSWORD" textFill="#5bc0de">
+                           <font>
+                              <Font name="Georgia" size="16.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <PasswordField fx:id="txtPassword" prefHeight="30.0" VBox.vgrow="NEVER">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </PasswordField>
+                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                           <children>
+                              <Button fx:id="btnLogin" mnemonicParsing="false" text="LOGIN">
+                                 <font>
+                                    <Font name="Georgia" size="14.0" />
+                                 </font>
+                                 <graphic>
+                                    <FontAwesomeIcon glyphName="SIGN_IN" />
+                                 </graphic>
+                                 <styleClass>
+                                    <String fx:value="buttonLogin" />
+                                    <String fx:value="button" />
+                                 </styleClass>
+                              </Button>
+                              <Button fx:id="btnCancel" mnemonicParsing="false" styleClass="buttonCancel" text="CANCEL">
+                                 <graphic>
+                                    <FontAwesomeIcon glyphName="SIGN_OUT" />
+                                 </graphic>
+                                 <font>
+                                    <Font name="Georgia" size="14.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </Pane>
+         </children>
+         <effect>
+            <DropShadow blurType="GAUSSIAN" height="56.34" radius="30.635" width="68.2">
+               <color>
+                  <Color red="0.1592084914445877" green="0.07005360722541809" blue="0.30263158679008484" />
+               </color>
+            </DropShadow>
+         </effect>
+      </StackPane>
+      <StackPane fx:id="registerPane" layoutX="664.0" layoutY="180.0" prefHeight="438.0" prefWidth="391.0" styleClass="box" stylesheets="@../css/login.css" visible="false">
+         <children>
+            <StackPane prefHeight="307.0" prefWidth="100.0" styleClass="circle" StackPane.alignment="TOP_CENTER">
+               <children>
+                  <FontAwesomeIcon fill="WHITE" glyphName="USER_PLUS" size="8em" StackPane.alignment="CENTER">
+                     <StackPane.margin>
+                        <Insets top="10.0" />
+                     </StackPane.margin>
+                  </FontAwesomeIcon>
+               </children>
+               <StackPane.margin>
+                  <Insets bottom="370.0" left="110.0" right="110.0" top="-100.0" />
+               </StackPane.margin>
+            </StackPane>
+            <Text fill="#5bc0de" strokeType="OUTSIDE" strokeWidth="0.0" text="REGISTER" StackPane.alignment="TOP_CENTER">
+               <StackPane.margin>
+                  <Insets bottom="10.0" top="80.0" />
+               </StackPane.margin>
+               <font>
+                  <Font name="Georgia Bold" size="20.0" />
+               </font>
+            </Text>
+            <Pane StackPane.alignment="CENTER">
+               <padding>
+                  <Insets bottom="10.0" top="100.0" />
+               </padding>
+               <StackPane.margin>
+                  <Insets top="120.0" />
+               </StackPane.margin>
+               <children>
+                  <VBox layoutX="83.0" layoutY="21.0" prefHeight="226.0" prefWidth="229.0" style="-fx-background-color: white;">
+                     <children>
+                        <Label text="USER NAME" textFill="#5bc0de">
+                           <font>
+                              <Font name="Georgia" size="14.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </Label>
+                        <TextField fx:id="txtNewUserName" promptText="Enter User Name">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </TextField>
+                        <Label text="PASSWORD" textFill="#5bc0de">
+                           <font>
+                              <Font name="Georgia" size="14.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <PasswordField fx:id="txtNewPassword" prefHeight="25.0" prefWidth="233.0" promptText="Enter Password" VBox.vgrow="NEVER">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </PasswordField>
+                        <Label layoutX="10.0" layoutY="64.0" text="RE-PASSWORD" textFill="#5bc0de">
+                           <font>
+                              <Font name="Georgia" size="14.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <PasswordField fx:id="txtNewRePassword" layoutX="10.0" layoutY="83.0" prefHeight="25.0" prefWidth="233.0" promptText="Enter Password">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </PasswordField>
+                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+                           <children>
+                              <Button fx:id="btnRegister" mnemonicParsing="false" text="REGISTER">
+                                 <font>
+                                    <Font name="Georgia" size="14.0" />
+                                 </font>
+                                 <graphic>
+                                    <FontAwesomeIcon glyphName="SAVE" />
+                                 </graphic>
+                                 <styleClass>
+                                    <String fx:value="buttonLogin" />
+                                    <String fx:value="button" />
+                                 </styleClass>
+                              </Button>
+                              <Button fx:id="btnNewCancel" mnemonicParsing="false" styleClass="buttonCancel" text="CANCEL">
+                                 <graphic>
+                                    <FontAwesomeIcon glyphName="SIGN_OUT" />
+                                 </graphic>
+                                 <font>
+                                    <Font name="Georgia" size="14.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </Pane>
+         </children>
+         <effect>
+            <DropShadow blurType="GAUSSIAN" height="56.34" radius="30.635" width="68.2">
+               <color>
+                  <Color red="0.1592084914445877" green="0.07005360722541809" blue="0.30263158679008484" />
+               </color>
+            </DropShadow>
+         </effect>
+      </StackPane>
+   </children>
+</AnchorPane>

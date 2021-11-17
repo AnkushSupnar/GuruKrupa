@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="723.0" prefWidth="1094.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ankush.controller.transaction.BillingFramController">
+   <children>
+      <TabPane layoutX="10.0" layoutY="148.0" prefHeight="403.0" prefWidth="676.0" style="-fx-border-color: black;" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="12.0" AnchorPane.topAnchor="148.0">
+        <tabs>
+          <Tab text="BILL">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="566.0" prefWidth="713.0">
+                     <children>
+                        <HBox layoutX="14.0" layoutY="14.0" spacing="5.0">
+                           <children>
+                              <Label text="BillNo">
+                                 <HBox.margin>
+                                    <Insets top="5.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField>
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                              <Label text="Date">
+                                 <HBox.margin>
+                                    <Insets left="50.0" top="5.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <DatePicker prefHeight="30.0" />
+                           </children>
+                        </HBox>
+                        <Label layoutX="15.0" layoutY="50.0" text="Item Name" />
+                        <HBox layoutX="14.0" layoutY="68.0" spacing="5.0">
+                           <children>
+                              <TextField prefHeight="25.0" prefWidth="184.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                              <ComboBox prefHeight="30.0" prefWidth="103.0" />
+                              <TextField prefHeight="30.0" prefWidth="86.0" promptText="1000000">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                              <TextField prefHeight="30.0" prefWidth="86.0" promptText="1000000">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                              <TextField prefHeight="30.0" prefWidth="86.0" promptText="1000000">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                              <TextField prefHeight="30.0" prefWidth="86.0" promptText="1000000">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                           </children>
+                        </HBox>
+                        <Label layoutX="207.0" layoutY="50.0" text="Metal" />
+                        <Label layoutX="314.0" layoutY="50.0" text="Rate/10gm." />
+                        <Label layoutX="409.0" layoutY="50.0" text="Quantity(gm.)" />
+                        <Label layoutX="502.0" layoutY="50.0" text="Majuri/Gram" />
+                        <Label layoutX="599.0" layoutY="50.0" text="Amount" />
+                        <HBox layoutX="14.0" layoutY="109.0" spacing="10.0">
+                           <children>
+                              <Button mnemonicParsing="false" stylesheets="@../css/button.css" text="ADD">
+                                 <graphic>
+                                    <FontAwesomeIcon glyphName="CART_PLUS" />
+                                 </graphic>
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Button>
+                              <Button mnemonicParsing="false" stylesheets="@../css/button.css" text="UPDATE">
+                                 <graphic>
+                                    <FontAwesomeIcon glyphName="EDIT" />
+                                 </graphic>
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Button>
+                              <Button mnemonicParsing="false" stylesheets="@../css/button.css" text="REMOVE">
+                                 <graphic>
+                                    <FontAwesomeIcon glyphName="ERASER" />
+                                 </graphic>
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Button>
+                              <Button mnemonicParsing="false" stylesheets="@../css/button.css" text="CLEAR">
+                                 <graphic>
+                                    <FontAwesomeIcon glyphName="RECYCLE" />
+                                 </graphic>
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </HBox>
+                        <TableView layoutX="15.0" layoutY="151.0" prefHeight="160.0" prefWidth="656.0">
+                          <columns>
+                            <TableColumn prefWidth="44.0" text="SR.NO" />
+                            <TableColumn prefWidth="244.0" text="ITEM NAME" />
+                              <TableColumn prefWidth="83.0" text="RATE/10 GM" />
+                              <TableColumn prefWidth="87.0" text="QUANTITY" />
+                              <TableColumn prefWidth="83.0" text="MAJURI" />
+                              <TableColumn prefWidth="112.0" text="AMOUNT" />
+                          </columns>
+                        </TableView>
+                        <Label layoutX="18.0" layoutY="310.0" text="Item Total" />
+                        <VBox layoutX="497.0" layoutY="306.0" spacing="5.0" />
+                        <Label layoutX="201.0" layoutY="310.0" text="Majuri Total" />
+                        <Label layoutX="382.0" layoutY="310.0" text="Grand Total" />
+                        <TextField alignment="CENTER_RIGHT" layoutX="201.0" layoutY="327.0" text="0.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </TextField>
+                        <TextField alignment="CENTER_RIGHT" layoutX="15.0" layoutY="327.0" text="0.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </TextField>
+                        <TextField alignment="CENTER_RIGHT" layoutX="380.0" layoutY="327.0" text="0.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </TextField>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="MODE BILL">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+      <Pane layoutX="12.0" prefHeight="148.0" prefWidth="676.0" style="-fx-border-color: black;" AnchorPane.leftAnchor="12.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label layoutX="11.0" layoutY="4.0" text="Customer Name" />
+            <HBox layoutX="10.0" layoutY="20.0" spacing="5.0">
+               <children>
+                  <TextField prefHeight="25.0" prefWidth="237.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Button mnemonicParsing="false" prefHeight="30.0" stylesheets="@../css/button.css" text="SEARCH">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                     <graphic>
+                        <FontAwesomeIcon glyphName="SEARCH" />
+                     </graphic>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" prefHeight="30.0" stylesheets="@../css/button.css" text="ADD">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                     <graphic>
+                        <FontAwesomeIcon glyphName="USER_PLUS" />
+                     </graphic>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+            <Label layoutX="11.0" layoutY="52.0" text="Customer Infirmation" />
+            <TextArea layoutX="10.0" layoutY="69.0" prefHeight="76.0" prefWidth="656.0" />
+         </children>
+      </Pane>
+      <Pane layoutX="12.0" layoutY="549.0" prefHeight="148.0" prefWidth="676.0" style="-fx-border-color: black;">
+         <children>
+            <Label layoutX="16.0" layoutY="59.0" text="Payment Mode" />
+            <RadioButton layoutX="107.0" layoutY="61.0" mnemonicParsing="false" text="CASH" />
+            <RadioButton layoutX="170.0" layoutY="61.0" mnemonicParsing="false" text="CREDIT" />
+            <Label layoutX="274.0" layoutY="61.0" text="Select Pay Bank" />
+            <ComboBox layoutX="359.0" layoutY="57.0" prefHeight="25.0" prefWidth="218.0" promptText="Select Bank Name" />
+            <Label layoutX="14.0" layoutY="4.0" text="Bill Amount" />
+            <HBox layoutX="14.0" layoutY="19.0" spacing="6.0">
+               <children>
+                  <TextField alignment="CENTER_RIGHT" maxWidth="100.0" text="0.0">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </TextField>
+                  <Label text="-">
+                     <HBox.margin>
+                        <Insets top="5.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Pane>
+                     <children>
+                        <TextField alignment="CENTER_RIGHT" maxWidth="100.0" text="0.0">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </TextField>
+                     </children>
+                  </Pane>
+                  <Label layoutX="170.0" layoutY="10.0" text="-">
+                     <HBox.margin>
+                        <Insets top="5.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField alignment="CENTER_RIGHT" maxWidth="100.0" text="0.0">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </TextField>
+                  <Label layoutX="345.0" layoutY="10.0" text="=">
+                     <HBox.margin>
+                        <Insets top="5.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField alignment="CENTER_RIGHT" maxWidth="100.0" text="0.0">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </TextField>
+                  <TextField alignment="CENTER_RIGHT" layoutX="368.0" layoutY="10.0" maxWidth="100.0" text="0.0">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </HBox>
+            <Label layoutX="134.0" layoutY="4.0" text="Mod Amount" />
+            <Label layoutX="252.0" layoutY="4.0" text="Discount" />
+            <Label layoutX="375.0" layoutY="4.0" text="Total Payable" />
+            <HBox layoutX="15.0" layoutY="97.0" spacing="10.0">
+               <children>
+                  <Button mnemonicParsing="false" stylesheets="@../css/button.css" text="SAVE">
+                     <graphic>
+                        <FontAwesomeIcon glyphName="SAVE" />
+                     </graphic>
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" stylesheets="@../css/button.css" text="UPDATE">
+                     <graphic>
+                        <FontAwesomeIcon glyphName="EDIT" />
+                     </graphic>
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" stylesheets="@../css/button.css" text="CLEAR">
+                     <graphic>
+                        <FontAwesomeIcon glyphName="RECYCLE" />
+                     </graphic>
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" stylesheets="@../css/button.css" text="PRINT">
+                     <graphic>
+                        <FontAwesomeIcon glyphName="PRINT" />
+                     </graphic>
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" stylesheets="@../css/button.css" text="HOME">
+                     <graphic>
+                        <FontAwesomeIcon glyphName="HOME" />
+                     </graphic>
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+            <Label layoutX="481.0" layoutY="2.0" text="Paid Amount" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

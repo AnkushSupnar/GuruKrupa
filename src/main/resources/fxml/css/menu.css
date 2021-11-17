@@ -1,0 +1,10 @@
+.root{
+-fx-background-color:white;
+}
+.box{
+-fx-background-color:linear-gradient(to bottom, #2262C6,#E839F6);
+    -fx-background-radius: 20;
+}
+.box .glyph-icon{
+    -fx-fill:white;
+}

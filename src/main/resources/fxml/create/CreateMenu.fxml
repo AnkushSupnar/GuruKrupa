@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="mainPane" prefHeight="531.0" prefWidth="875.0" stylesheets="@../css/menu.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ankush.controller.create.CreateMenuController">
+   <children>
+      <VBox layoutX="63.0" layoutY="34.0" prefHeight="171.0" styleClass="box">
+         <children>
+            <StackPane prefHeight="71.0" prefWidth="224.0">
+               <children>
+                  <FontAwesomeIcon glyphName="USER_PLUS" size="4.5em" />
+               </children>
+            </StackPane>
+            <HBox fx:id="menuAddCustomer" prefWidth="200.0" styleClass="menuitem" stylesheets="@../css/menuitem.css">
+               <children>
+                  <FontAwesomeIcon fill="#485460" glyphName="USER_PLUS" size="1.5em" HBox.hgrow="ALWAYS" />
+                  <Text fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: Quicksan;" styleClass="text-menuitem" text="ADD CUSTOMER">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </Text>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="30.0" top="5.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </HBox>
+            <HBox fx:id="menuVIewCustomer" layoutX="10.0" layoutY="81.0" prefWidth="200.0" styleClass="menuitem" stylesheets="@../css/menuitem.css">
+               <children>
+                  <FontAwesomeIcon fill="#485460" glyphName="LIST" size="1.5em" HBox.hgrow="ALWAYS" />
+                  <Text fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: Quicksan;" styleClass="text-menuitem" text="VIEW CUSTOMER">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </Text>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="30.0" top="5.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+         <effect>
+            <DropShadow blurType="ONE_PASS_BOX" height="68.2" radius="25.445" width="35.58" />
+         </effect>
+      </VBox>
+      <VBox layoutX="310.0" layoutY="34.0" prefHeight="171.0" styleClass="box">
+         <children>
+            <StackPane prefHeight="71.0" prefWidth="224.0">
+               <children>
+                  <FontAwesomeIcon glyphName="DIAMOND" size="4.5em" />
+               </children>
+            </StackPane>
+            <HBox fx:id="menuAddItem" prefWidth="200.0" styleClass="menuitem" stylesheets="@../css/menuitem.css">
+               <children>
+                  <FontAwesomeIcon fill="#485460" glyphName="DIAMOND" size="1.5em" HBox.hgrow="ALWAYS" />
+                  <Text fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: Quicksan;" styleClass="text-menuitem" text="ADD NEW ITEM">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </Text>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="30.0" top="5.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </HBox>
+            <HBox fx:id="menuViewItem" layoutX="10.0" layoutY="81.0" prefWidth="200.0" styleClass="menuitem" stylesheets="@../css/menuitem.css">
+               <children>
+                  <FontAwesomeIcon fill="#485460" glyphName="LIST" size="1.5em" HBox.hgrow="ALWAYS" />
+                  <Text fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: Quicksan;" styleClass="text-menuitem" text="VIEW ALL ITEM">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </Text>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="30.0" top="5.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+         <effect>
+            <DropShadow blurType="ONE_PASS_BOX" height="68.2" radius="25.445" width="35.58" />
+         </effect>
+      </VBox>
+      <VBox layoutX="559.0" layoutY="34.0" prefHeight="171.0" styleClass="box">
+         <children>
+            <StackPane prefHeight="71.0" prefWidth="224.0">
+               <children>
+                  <FontAwesomeIcon glyphName="DIAMOND" size="4.5em" />
+               </children>
+            </StackPane>
+            <HBox fx:id="menuAddUser" prefWidth="200.0" styleClass="menuitem" stylesheets="@../css/menuitem.css">
+               <children>
+                  <FontAwesomeIcon fill="#485460" glyphName="DIAMOND" size="1.5em" HBox.hgrow="ALWAYS" />
+                  <Text fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: Quicksan;" styleClass="text-menuitem" text="ADD NEW USER">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </Text>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="30.0" top="5.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </HBox>
+            <HBox fx:id="menuEditUser" layoutX="10.0" layoutY="81.0" prefWidth="200.0" styleClass="menuitem" stylesheets="@../css/menuitem.css">
+               <children>
+                  <FontAwesomeIcon fill="#485460" glyphName="LIST" size="1.5em" HBox.hgrow="ALWAYS" />
+                  <Text fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: Quicksan;" styleClass="text-menuitem" text="EDIT USER">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </Text>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="30.0" top="5.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+         <effect>
+            <DropShadow blurType="ONE_PASS_BOX" height="68.2" radius="25.445" width="35.58" />
+         </effect>
+      </VBox>
+   </children>
+</AnchorPane>
