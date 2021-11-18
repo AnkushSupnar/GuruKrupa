@@ -9,6 +9,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter@Setter
+@ToString
 @Builder
 public class Bank {
     @Id

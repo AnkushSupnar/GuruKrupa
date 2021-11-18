@@ -54,6 +54,16 @@ public enum FxmlView {
             return "/fxml/transaction/BillingFrame.fxml";
         }
     },
+    RATE {
+        @Override
+        String getTitle() {
+            return getStringFromResourceBundle("dashboard.title");
+        }
+        @Override
+        public String getFxmlFile() {
+            return "/fxml/transaction/SetRate.fxml";
+        }
+    },
     DASHBOARD {
         @Override
         String getTitle() {
