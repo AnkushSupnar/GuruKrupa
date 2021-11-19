@@ -40,6 +40,16 @@ public class RateService {
         repository.save(rate);
         return 1;
     }
+    public List<String>getPurityNames()
+    {
+        return repository.getPurityNames();
+    }
+    public List<String>getMetalNames()
+    {
+        return repository.getMetalNames();
+    }
+    public Rate getLastRate(String metal,String purity){return repository.getLastRate(metal,purity);}
+
 
 
 }

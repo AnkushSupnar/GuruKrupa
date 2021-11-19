@@ -21,4 +21,13 @@ public interface RateRepository extends JpaRepository<Rate, Long> {
 
     @Query("from Rate where date=:date and lower(metal)=:metal and lower(purity)=:purity")
     Rate getByDateAndMetalAndPurity(@Param("date")LocalDate date,@Param("metal")String metal,@Param("purity")String purity);
+
+    @Query("select distinct(purity) from Rate")
+    List<String>getPurityNames();
+
+    @Query("select distinct(metal) from Rate")
+    List<String>getMetalNames();
+
+    @Query("from Rate where metal=:metal and purity=:purity ")
+    Rate getLastRate(@Param("metal")String metal,@Param("purity")String purity);
 }

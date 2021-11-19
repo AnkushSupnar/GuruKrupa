@@ -3,6 +3,8 @@ package com.ankush.controller.transaction;
 import com.ankush.data.entities.Rate;
 import com.ankush.data.service.RateService;
 import com.ankush.view.AlertNotification;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -10,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import org.controlsfx.control.textfield.TextFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,6 +44,14 @@ public class SetRateController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         id=null;
+        TextFields.bindAutoCompletion(txtPurity,service.getPurityNames());
+        TextFields.bindAutoCompletion(txtMetal,service.getMetalNames());
+        txtRate.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("\\d{0,100}([\\.]\\d{0,6})?"))
+                    txtRate.setText(oldValue);
+            } });
         date.setValue(LocalDate.now());
         colSrNo.setCellValueFactory(new PropertyValueFactory<>("id"));
         colDate.setCellValueFactory(new PropertyValueFactory<>("date"));

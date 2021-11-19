@@ -29,5 +29,13 @@ public class CustomerService {
             return 2;
         }
     }
+    public List<String>getAllCustomerNames()
+    {
+        return repository.getAllCustomerNames();
+    }
+    public Customer getByCustomerName(String customername)
+    {
+        return repository.getByCustomername(customername);
+    }
 
 }
