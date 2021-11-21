@@ -48,7 +48,9 @@ public class RateService {
     {
         return repository.getMetalNames();
     }
-    public Rate getLastRate(String metal,String purity){return repository.getLastRate(metal,purity);}
+    public Rate getTodayRate(LocalDate date,String metal,String purity){
+        return repository.getTodayRate(date,metal,purity);
+    }
 
 
 

@@ -28,6 +28,6 @@ public interface RateRepository extends JpaRepository<Rate, Long> {
     @Query("select distinct(metal) from Rate")
     List<String>getMetalNames();
 
-    @Query("from Rate where metal=:metal and purity=:purity ")
-    Rate getLastRate(@Param("metal")String metal,@Param("purity")String purity);
+    @Query("from Rate where date=:date and metal=:metal and purity=:purity ")
+    Rate getTodayRate(@Param("date")LocalDate date,@Param("metal")String metal,@Param("purity")String purity);
 }
