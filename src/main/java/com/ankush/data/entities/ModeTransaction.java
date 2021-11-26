@@ -4,8 +4,9 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Table(name = "modetransaction")
+
 @Entity
+@Table(name = "modetransaction")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -15,7 +16,7 @@ import javax.persistence.*;
 public class ModeTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @Column(name = "itemname")

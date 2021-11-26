@@ -1,6 +1,7 @@
 package com.ankush.data.entities;
 
 import lombok.*;
+import net.bytebuddy.dynamic.loading.InjectionClassLoader;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -15,7 +16,8 @@ import java.util.List;
 @Builder
 public class Bill {
     @Id
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "billno", unique = true)
@@ -23,7 +25,6 @@ public class Bill {
 
     @Column(name = "date")
     private LocalDate date;
-
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
@@ -52,7 +53,7 @@ public class Bill {
     private String paymode;
 
 
-    @OneToMany(mappedBy = "bill", orphanRemoval = true)
+    @OneToMany(mappedBy = "bill",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactions;
 
     @ManyToOne

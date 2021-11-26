@@ -152,21 +152,20 @@ public class BillingFramController implements Initializable {
                 .modeno(txtModNo.getText())
                 .payby("Bill")
                 .build();
-        for (int i = 0; i < modetrList.size(); i++)
-        {
-            modetrList.get(i).setMode(mode);
-        }
-        for(ModeTransaction tr:modetrList)
-        {
-            System.out.println("in Transaction"+tr.getMode());
-        }
-        mode.getModTransactions().addAll(modetrList);
-        int flag = modeService.saveMode(mode);
-        System.out.println("Mode Saved"+mode.getId());
+       for(ModeTransaction tr:modetrList)
+       {
+           tr.setId(null);
+           tr.setMode(mode);
+           mode.getModTransactions().add(tr);
+       }
+
+
+
         String paymode = rdbtnCash.isSelected()?"Cash":"credit";
         Bill bill = Bill.builder()
-                .transactions(trList)
+                .transactions(new ArrayList<Transaction>())
                 .bank(bankService.getByName(cmbBank.getValue()))
+                .date(date.getValue())
                 .billamount(Float.parseFloat(txtBillAmount.getText()))
                 .customer(customerService.getByCustomerName(txtCustomer.getText()))
                 .discount(Float.parseFloat(txtDiscount.getText()))
@@ -176,6 +175,20 @@ public class BillingFramController implements Initializable {
                 .paid(Float.parseFloat(txtPaid.getText()))
                 .paymode(paymode)
                 .build();
+        bill.setId(null);
+        for(Transaction tr:trList)
+        {
+            tr.setId(null);
+            tr.setBill(bill);
+            bill.getTransactions().add(tr);
+        }
+        int f = billService.saveBill(bill);
+        if(f==1)
+        {
+            int flag = modeService.saveMode(mode);
+            System.out.println("Saved id "+mode.getId());
+            alert.showSuccess("Bill Saved Success ");
+        }
         //System.out.println(bill);
 
     }

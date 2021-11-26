@@ -7,8 +7,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(name = "mode")
+
 @Entity
+@Table(name = "mode")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -18,7 +19,7 @@ import java.util.List;
 public class Mode {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @Column(name = "modeno")
@@ -37,9 +38,7 @@ public class Mode {
     @Column(name = "payby")
     private String payby;
 
-    @OneToMany(mappedBy = "mode",cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ModeTransaction> modTransactions = new ArrayList<>();
-
-
+    @OneToMany(mappedBy = "mode", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ModeTransaction> modTransactions;
 
 }
