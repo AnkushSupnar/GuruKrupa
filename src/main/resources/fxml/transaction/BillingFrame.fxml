@@ -72,7 +72,7 @@
                                     <Font size="14.0" />
                                  </font>
                               </TextField>
-                              <TextField fx:id="txtAmount" prefHeight="30.0" prefWidth="80.0" promptText="Amount">
+                              <TextField fx:id="txtAmount" editable="false" prefHeight="30.0" prefWidth="80.0" promptText="Amount">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -204,7 +204,7 @@
                                     <Font size="14.0" />
                                  </font>
                               </TextField>
-                              <TextField fx:id="txtModAmount" prefHeight="30.0" prefWidth="80.0" promptText="1000000">
+                              <TextField fx:id="txtModAmount" editable="false" prefHeight="30.0" prefWidth="80.0" promptText="1000000">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -268,12 +268,12 @@
                         </TableView>
                         <Label layoutX="17.0" layoutY="339.0" text="Item Total" AnchorPane.bottomAnchor="10.0" />
                         <Label layoutX="249.0" layoutY="341.0" text="Grand Total" AnchorPane.bottomAnchor="10.0" />
-                        <TextField fx:id="txtModGrandTotal" alignment="CENTER_RIGHT" layoutX="315.0" layoutY="335.0" text="0.0" AnchorPane.bottomAnchor="5.0">
+                        <TextField fx:id="txtModGrandTotal" alignment="CENTER_RIGHT" editable="false" layoutX="315.0" layoutY="335.0" text="0.0" AnchorPane.bottomAnchor="5.0">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </TextField>
-                        <TextField fx:id="txtModNetTotal" alignment="CENTER_RIGHT" layoutX="73.0" layoutY="334.0" text="0.0" AnchorPane.bottomAnchor="5.0">
+                        <TextField fx:id="txtModNetTotal" alignment="CENTER_RIGHT" editable="false" layoutX="73.0" layoutY="334.0" text="0.0" AnchorPane.bottomAnchor="5.0">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -332,7 +332,7 @@
             <Label layoutX="14.0" layoutY="20.0" text="Bill Amount" />
             <HBox layoutX="14.0" layoutY="35.0" spacing="6.0">
                <children>
-                  <TextField fx:id="txtBillAmount" alignment="CENTER_RIGHT" maxWidth="100.0" text="0.0">
+                  <TextField fx:id="txtBillAmount" alignment="CENTER_RIGHT" editable="false" maxWidth="100.0" text="0.0">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
@@ -347,7 +347,7 @@
                   </Label>
                   <Pane>
                      <children>
-                        <TextField fx:id="txtModeAmount" alignment="CENTER_RIGHT" maxWidth="100.0" text="0.0">
+                        <TextField fx:id="txtModeTotalAmount" alignment="CENTER_RIGHT" editable="false" maxWidth="100.0" text="0.0">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
@@ -375,7 +375,7 @@
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtPayable" alignment="CENTER_RIGHT" maxWidth="100.0" text="0.0">
+                  <TextField fx:id="txtPayable" alignment="CENTER_RIGHT" editable="false" maxWidth="100.0" text="0.0">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>

@@ -3,6 +3,7 @@ package com.ankush.data.entities;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.List;
 
 @Table(name = "bill")
@@ -20,6 +21,9 @@ public class Bill {
     @Column(name = "billno", unique = true)
     private String billno;
 
+    @Column(name = "date")
+    private LocalDate date;
+
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
@@ -30,7 +34,7 @@ public class Bill {
     private Bank bank;
 
     @Column(name = "mod_id")
-    private Long modid;
+    private String modno;
 
     @Column(name = "modeamount")
     private Float modeamount;

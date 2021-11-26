@@ -44,6 +44,6 @@ public class ModeTransaction {
 
     @ManyToOne
     @JoinColumn(name = "modeid")
-    private Mode modeid;
+    private Mode mode;
 
 }

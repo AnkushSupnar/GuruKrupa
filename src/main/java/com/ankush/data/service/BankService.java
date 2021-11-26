@@ -20,6 +20,7 @@ public class BankService {
     {
         return repository.findAll();
     }
+    public List<String>getAllBankNames(){return repository.getAllBankNames();}
     public int save(Bank bank)
     {
         if(bank.getId()==null){
@@ -31,5 +32,9 @@ public class BankService {
             repository.save(bank);
             return 2;
         }
+    }
+    public Bank getByName(String name)
+    {
+        return repository.getByName(name);
     }
 }

@@ -1,12 +1,8 @@
 package com.ankush.controller.transaction;
 
 import com.ankush.config.SpringFXMLLoader;
-import com.ankush.data.entities.Customer;
-import com.ankush.data.entities.ModeTransaction;
-import com.ankush.data.entities.Transaction;
-import com.ankush.data.service.CustomerService;
-import com.ankush.data.service.ItemService;
-import com.ankush.data.service.RateService;
+import com.ankush.data.entities.*;
+import com.ankush.data.service.*;
 import com.ankush.view.AlertNotification;
 import com.ankush.view.StageManager;
 import impl.org.controlsfx.autocompletion.SuggestionProvider;
@@ -26,6 +22,7 @@ import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 @Component
@@ -96,7 +93,8 @@ public class BillingFramController implements Initializable {
 
     @FXML private ComboBox<String> cmbBank;
     @FXML private TextField txtBillAmount;
-    @FXML private TextField txtModeAmount;
+    @FXML private TextField txtModeTotalAmount;
+    //@FXML private TextField txtModeAmount;
     @FXML private TextField txtDiscount;
     @FXML private TextField txtPayable;
     @FXML private TextField txtPaid;
@@ -114,6 +112,12 @@ public class BillingFramController implements Initializable {
     @Autowired
     private RateService rateService;
     @Autowired
+    private BankService bankService;
+    @Autowired
+    private BillService billService;
+    @Autowired
+    private ModeService modeService;
+    @Autowired
     private AlertNotification alert;
     private SuggestionProvider<String> customerNameProvide;
     private SuggestionProvider<String> itemNameProvide;
@@ -124,10 +128,56 @@ public class BillingFramController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         bill();
         mod();
+
+        cmbBank.getItems().addAll(bankService.getAllBankNames());
+
         btnSave.setOnAction(e->save());
+        txtDiscount.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("\\d{0,100}([\\.]\\d{0,6})?"))
+                    txtDiscount.setText(oldValue);
+            }
+        });
+        txtDiscount.setOnAction(e->calculatePayableAmount());
     }
     private void save() {
-        if(!validateBill()) return;
+        if (!validateBill()) return;
+
+        Mode mode = Mode.builder()
+                .amount(Float.parseFloat(txtModeTotalAmount.getText()))
+                .customer(customerService.getByCustomerName(txtCustomer.getText()))
+                .modTransactions(new ArrayList<ModeTransaction>())
+                .date(dateMod.getValue())
+                .modeno(txtModNo.getText())
+                .payby("Bill")
+                .build();
+        for (int i = 0; i < modetrList.size(); i++)
+        {
+            modetrList.get(i).setMode(mode);
+        }
+        for(ModeTransaction tr:modetrList)
+        {
+            System.out.println("in Transaction"+tr.getMode());
+        }
+        mode.getModTransactions().addAll(modetrList);
+        int flag = modeService.saveMode(mode);
+        System.out.println("Mode Saved"+mode.getId());
+        String paymode = rdbtnCash.isSelected()?"Cash":"credit";
+        Bill bill = Bill.builder()
+                .transactions(trList)
+                .bank(bankService.getByName(cmbBank.getValue()))
+                .billamount(Float.parseFloat(txtBillAmount.getText()))
+                .customer(customerService.getByCustomerName(txtCustomer.getText()))
+                .discount(Float.parseFloat(txtDiscount.getText()))
+                .modeamount(Float.parseFloat(txtModeTotalAmount.getText()))
+                .modno(txtModNo.getText())
+                .billno(txtBillNo.getText())
+                .paid(Float.parseFloat(txtPaid.getText()))
+                .paymode(paymode)
+                .build();
+        //System.out.println(bill);
+
     }
     private boolean validateBill() {
         if(trList.size()==0)
@@ -135,10 +185,41 @@ public class BillingFramController implements Initializable {
             alert.showError("No Billing data to show");
             return false;
         }
+        if(txtCustomerInformation.getText().isEmpty())
+        {
+            alert.showError("Enter Customer Name");
+            txtCustomer.requestFocus();
+            return false;
+        }
+        if(cmbBank.getValue()==null)
+        {
+            alert.showError("Select Bank Name");
+            cmbBank.requestFocus();
+            return false;
+        }
+        if(!rdbtnCash.isSelected() && !rdbtnCredit.isSelected())
+        {
+            alert.showError("Select Payment Method Cash or Credit!!!");
+            return false;
+        }
+        if(rdbtnCash.isSelected() && (txtPaid.getText().isEmpty() || !isNumeric(txtPaid.getText()) || txtPaid.getText().equals(""+0.0)))
+        {
+            alert.showError("Enter Paid Amount");
+            txtPaid.requestFocus();
+            return false;
+        }
+        if(rdbtnCash.isSelected() &&(Float.parseFloat(txtPaid.getText()))<Float.parseFloat(txtPayable.getText()))
+        {
+            alert.showError("Enter Correct Paid Amount Should be equal to Payable Amount");
+            txtPaid.requestFocus();
+            return false;
+        }
+
 
         return true;
     }
     private void bill() {
+        txtBillNo.setText("A"+billService.getNewBillNo());
         date.setValue(LocalDate.now());
         ToggleGroup tg = new ToggleGroup();
         rdbtnCash.setToggleGroup(tg);
@@ -324,6 +405,14 @@ public class BillingFramController implements Initializable {
         txtTotalMajuri.setText(String.valueOf(Float.parseFloat(txtTotalMajuri.getText()) + t.getMajuri()));
         txtGrandTotal.setText(String.valueOf(Float.parseFloat(txtGrandTotal.getText()) + t.getAmount()));
         txtBillAmount.setText(txtGrandTotal.getText());
+        calculatePayableAmount();
+    }
+    private void calculatePayableAmount()
+    {
+        if(txtDiscount.getText().isEmpty() || !isNumeric(txtDiscount.getText())) txtDiscount.setText(""+0.0f);
+        txtPayable.setText(
+                String.valueOf(Float.parseFloat(txtBillAmount.getText())- Float.parseFloat(txtModeTotalAmount.getText())-Float.parseFloat(txtDiscount.getText()))
+        );
     }
 
     private boolean validateItem() {
@@ -392,6 +481,7 @@ public class BillingFramController implements Initializable {
     }
 //mode Controller
     private void mod() {
+        txtModNo.setText("A"+modeService.getNewModeNo());
         dateMod.setValue(LocalDate.now());
         cmbModMetal.getItems().add("Gold");
         cmbModMetal.getItems().add("Silver");
@@ -406,8 +496,180 @@ public class BillingFramController implements Initializable {
         colModGhat.setCellValueFactory(new PropertyValueFactory<>("ghat"));
         colModeFinalWeight.setCellValueFactory(new PropertyValueFactory<>("finalweight"));
         colModAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
-
         tableMod.setItems(modetrList);
+        txtModeRate.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("\\d{0,100}([\\.]\\d{0,6})?"))
+                    txtModeRate.setText(oldValue);
+            }
+        });
+        txtModeItemName.setOnAction(e->{
+            if(txtModeItemName.getText().isEmpty() || txtModeItemName.getText().trim().equals("")) return;
+            cmbModMetal.requestFocus();
+        });
+        txtModeWieght.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("\\d{0,100}([\\.]\\d{0,6})?"))
+                    txtModeWieght.setText(oldValue);
+            }
+        });
+        txtModeGhat.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("\\d{0,100}([\\.]\\d{0,6})?"))
+                    txtModeGhat.setText(oldValue);
+            }
+        });
+        txtModeRate.setOnAction(e->{calculateModeAmount();txtModeWieght.requestFocus();});
+        txtModeWieght.setOnAction(e->{calculateModeAmount();txtModeGhat.requestFocus();});
+        txtModeGhat.setOnAction(e->{calculateModeAmount();btnModeAdd.requestFocus();});
+        btnModeAdd.setOnAction(e->modeAdd());
+        btnModeUpdate.setOnAction(e->updateMode());
+        btnModeRemove.setOnAction(e->modeRemove());
+        btnModclear.setOnAction(e->modeClear());
     }
+
+    private void modeClear() {
+        txtModeItemName.setText("");
+        cmbModMetal.getSelectionModel().clearSelection();
+        cmbModPurity.getSelectionModel().clearSelection();
+        txtModeRate.setText("");
+        txtModeWieght.setText("");
+        txtModeGhat.setText("");
+        txtModAmount.setText("");
+    }
+
+    private void modeRemove() {
+        if(tableMod.getSelectionModel().getSelectedItem()==null) return;
+        txtModeTotalAmount.setText(String.valueOf(Float.parseFloat(txtModeTotalAmount.getText())-tableMod.getSelectionModel().getSelectedItem().getAmount()));
+        modetrList.remove(tableMod.getSelectionModel().getSelectedIndex());
+        calculatePayableAmount();
+    }
+
+    private void updateMode() {
+        if(tableMod.getSelectionModel().getSelectedItem()==null) return;
+        ModeTransaction tr =tableMod.getSelectionModel().getSelectedItem();
+        txtModeItemName.setText(tr.getItemname());
+        cmbModMetal.setValue(tr.getMetal());
+        cmbModPurity.setValue(tr.getPurity());
+        txtModeRate.setText(String.valueOf(tr.getRate()));
+        txtModeWieght.setText(String.valueOf(tr.getWeight()));
+        txtModeGhat.setText(String.valueOf(tr.getGhat()));
+        txtModAmount.setText(String.valueOf(tr.getAmount()));
+    }
+
+    private void modeAdd() {
+        if(!validateMode()) return;
+        ModeTransaction modeTransaction = ModeTransaction.builder()
+                .amount(Float.parseFloat(txtModAmount.getText()))
+                .finalweight(Float.parseFloat(txtModeWieght.getText())-Float.parseFloat(txtModeGhat.getText()))
+                .ghat(Float.parseFloat(txtModeGhat.getText()))
+                .itemname(txtModeItemName.getText())
+                .metal(cmbModMetal.getValue())
+                .purity(cmbModPurity.getValue())
+                .rate(Float.parseFloat(txtModeRate.getText()))
+                .weight(Float.parseFloat(txtModeWieght.getText()))
+                .build();
+        addModeInModeTransaction(modeTransaction);
+        modeClear();
+        calculatePayableAmount();
+
+    }
+
+    private void addModeInModeTransaction(ModeTransaction tr) {
+        int index=-1;
+        for(ModeTransaction t:modetrList)
+        {
+            if(tr.getItemname().equalsIgnoreCase(t.getItemname()) &&
+            tr.getMetal().equalsIgnoreCase(t.getMetal())&&
+            tr.getPurity().equalsIgnoreCase(t.getPurity())&&
+            tr.getRate().equals(t.getRate()))
+            {
+                index = modetrList.indexOf(t);
+                break;
+            }
+        }
+        if(index==-1)
+        {
+            tr.setId((long) (modetrList.size()+1));
+            modetrList.add(tr);
+            tableMod.refresh();
+        }
+        else
+        {
+            modetrList.get(index).setWeight(modetrList.get(index).getWeight()+tr.getWeight());
+            modetrList.get(index).setGhat(modetrList.get(index).getGhat()+tr.getGhat());
+            modetrList.get(index).setAmount(modetrList.get(index).getAmount()+tr.getAmount());
+            modetrList.get(index).setFinalweight(modetrList.get(index).getFinalweight()+tr.getFinalweight());
+            tableMod.refresh();
+
+        }
+
+        txtModeTotalAmount.setText(String.valueOf(Float.parseFloat(txtModeTotalAmount.getText())+tr.getAmount()));
+        txtModNetTotal.setText(String.valueOf(Float.parseFloat(txtModNetTotal.getText())+tr.getAmount()));
+        txtModGrandTotal.setText(String.valueOf(Float.parseFloat(txtModGrandTotal.getText())+tr.getAmount()));
+
+    }
+
+    private boolean validateMode() {
+        if(txtModeItemName.getText().isEmpty())
+        {
+            alert.showError("Enter Mode Item Name");
+            txtModeItemName.requestFocus();
+            return false;
+        }
+        if(cmbModMetal.getValue()==null)
+        {
+            alert.showError("Enter Mode Metal Name");
+            cmbModMetal.requestFocus();
+            return false;
+        }
+        if(cmbModPurity.getValue()==null)
+        {
+            alert.showError("Select Mode Item Purity");
+            cmbModPurity.requestFocus();
+            return false;
+        }
+        if(txtModeRate.getText().isEmpty() ||txtModeRate.getText().equals(""+0.0) )
+        {
+            alert.showError("Enter Mode Item Metal Rate");
+            txtModeRate.requestFocus();
+            return false;
+        }
+        if(txtModeWieght.getText().isEmpty() || txtModeWieght.getText().equals(""+0.0))
+        {
+            alert.showError("Enter Mode Weight");
+            txtModeWieght.requestFocus();
+            return false;
+        }
+        if(txtModeGhat.getText().isEmpty()) txtModeGhat.setText(""+0.0f);
+        if(txtModAmount.getText().isEmpty() || txtModAmount.getText().equals(""+0.0))
+        {
+            alert.showError("Enter Details Again");
+            txtModeItemName.requestFocus();
+            return false;
+        }
+        return true;
+    }
+
+    void calculateModeAmount()
+    {
+        if(txtModeRate.getText().isEmpty() || !isNumeric(txtModeRate.getText())) txtModeRate.setText(""+0.0f);
+        if(txtModeWieght.getText().isEmpty() || !isNumeric(txtModeWieght.getText())) txtModeWieght.setText(""+0.0f);
+        if(txtModeGhat.getText().isEmpty() || !isNumeric(txtModeGhat.getText())) txtModeGhat.setText(""+0.0f);
+        txtModAmount.setText(
+                String.valueOf(
+                        (Float.parseFloat(txtModeRate.getText())/10)*
+                                (
+                                        Float.parseFloat(txtModeWieght.getText())-Float.parseFloat(txtModeGhat.getText())
+                                        )
+                )
+        );
+    }
+
+
+
 
 }

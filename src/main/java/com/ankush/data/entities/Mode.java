@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "mode")
@@ -20,6 +21,9 @@ public class Mode {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "modeno")
+    private String modeno;
+
     @Column(name = "date")
     private LocalDate date;
 
@@ -33,7 +37,9 @@ public class Mode {
     @Column(name = "payby")
     private String payby;
 
-    @OneToMany(mappedBy = "modeid", orphanRemoval = true)
-    private List<ModeTransaction> modTransactions;
+    @OneToMany(mappedBy = "mode",cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ModeTransaction> modTransactions = new ArrayList<>();
+
+
 
 }
