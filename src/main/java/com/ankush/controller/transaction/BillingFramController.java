@@ -6,6 +6,7 @@ import com.ankush.data.service.*;
 import com.ankush.view.AlertNotification;
 import com.ankush.view.StageManager;
 import impl.org.controlsfx.autocompletion.SuggestionProvider;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -104,30 +105,44 @@ public class BillingFramController implements Initializable {
     @FXML private Button btnPrint;
     @FXML private Button btnHome;
 
+    @FXML private TableView<Bill> tableOld;
+    @FXML private TableColumn<Bill,Long> colSrNo;
+    @FXML private TableColumn<Bill,LocalDate> colDate;
+    @FXML private TableColumn<Bill,String> colBillNo;
+    @FXML private TableColumn<Bill,String> colCustomer;
+    @FXML private TableColumn<Bill,String> colPaymode;
+    @FXML private TableColumn<Bill,String> colBillAmount;
+    @FXML private DatePicker dateSearch;
+    @FXML private TextField txtBillNoSearch;
+    @FXML private TextField txtCustomerSearch;
+    @FXML private Button btnSearchBull;
     private Pane pane;
-    @Autowired
-    private CustomerService customerService;
-    @Autowired
-    private ItemService itemService;
-    @Autowired
-    private RateService rateService;
-    @Autowired
-    private BankService bankService;
-    @Autowired
-    private BillService billService;
-    @Autowired
-    private ModeService modeService;
-    @Autowired
-    private AlertNotification alert;
+    @Autowired private CustomerService customerService;
+    @Autowired private ItemService itemService;
+    @Autowired private RateService rateService;
+    @Autowired private BankService bankService;
+    @Autowired private BillService billService;
+    @Autowired private ModeService modeService;
+    @Autowired private AlertNotification alert;
     private SuggestionProvider<String> customerNameProvide;
     private SuggestionProvider<String> itemNameProvide;
     private ObservableList<Transaction> trList = FXCollections.observableArrayList();
     private ObservableList<ModeTransaction> modetrList = FXCollections.observableArrayList();
-
+    private ObservableList<Bill> billList = FXCollections.observableArrayList();
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         bill();
         mod();
+        colSrNo.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+        colBillNo.setCellValueFactory(new PropertyValueFactory<>("billno"));
+        colPaymode.setCellValueFactory(new PropertyValueFactory<>("paymode"));
+        colBillAmount.setCellValueFactory(new PropertyValueFactory<>("billamount"));
+        colCustomer.setCellValueFactory(cellData->new SimpleStringProperty(cellData.getValue().getCustomer().getCustomername()));
+        billList.addAll(billService.getBillByDate(date.getValue()));
+        tableOld.setItems(billList);
+
+
 
         cmbBank.getItems().addAll(bankService.getAllBankNames());
 
@@ -140,9 +155,25 @@ public class BillingFramController implements Initializable {
             }
         });
         txtDiscount.setOnAction(e->calculatePayableAmount());
+        btnUpdate2.setOnAction(e->updateBill());
+        btnClear2.setOnAction(e->clearBill());
     }
+
+    private void clearBill() {
+    }
+
+    private void updateBill() {
+        if(tableOld.getSelectionModel().getSelectedItem()==null) return;
+        Bill bill = billService.getBillByBillno(tableOld.getSelectionModel().getSelectedItem().getBillno());
+        System.out.println(bill.getCustomer().getCustomername());
+
+
+
+    }
+
     private void save() {
         if (!validateBill()) return;
+
 
         Mode mode = Mode.builder()
                 .amount(Float.parseFloat(txtModeTotalAmount.getText()))
@@ -175,6 +206,10 @@ public class BillingFramController implements Initializable {
                 .paid(Float.parseFloat(txtPaid.getText()))
                 .paymode(paymode)
                 .build();
+        if(txtModeTotalAmount.getText().equals(""+0.0))
+        {
+            bill.setModno("0");
+        }
         bill.setId(null);
         for(Transaction tr:trList)
         {
@@ -185,13 +220,39 @@ public class BillingFramController implements Initializable {
         int f = billService.saveBill(bill);
         if(f==1)
         {
-            int flag = modeService.saveMode(mode);
+            if(!txtModeTotalAmount.getText().equals(""+0.0)) {
+                modeService.saveMode(mode);
+            }
             System.out.println("Saved id "+mode.getId());
             alert.showSuccess("Bill Saved Success ");
+            addInBIllList(bill);
         }
         //System.out.println(bill);
 
     }
+
+    private void addInBIllList(Bill bill) {
+        int index=-1;
+        for(Bill b:billList)
+        {
+            if(b.getBillno().equals(bill.getBillno()))
+            {
+                index=billList.indexOf(b);
+                break;
+            }
+        }
+        if(index ==-1)
+        {
+           billList.add(bill);
+           tableOld.refresh();
+        }
+        else{
+            billList.remove(index);
+            billList.add(index,bill);
+            tableOld.refresh();
+        }
+    }
+
     private boolean validateBill() {
         if(trList.size()==0)
         {

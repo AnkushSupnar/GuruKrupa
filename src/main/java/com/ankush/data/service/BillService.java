@@ -5,6 +5,9 @@ import com.ankush.data.repository.BillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Service
 public class BillService {
     @Autowired
@@ -28,5 +31,11 @@ public class BillService {
             repository.save(bill);
             return 2;
         }
+    }
+    public List<Bill> getBillByDate(LocalDate date){
+        return repository.getByDate(date);
+    }
+    public Bill getBillByBillno(String billno){
+        return repository.getByBillno(billno);
     }
 }
