@@ -32,10 +32,17 @@ public class BillService {
             return 2;
         }
     }
+    public List<Bill>getAllBills(){
+        return repository.findAll();
+    }
     public List<Bill> getBillByDate(LocalDate date){
         return repository.getByDate(date);
     }
     public Bill getBillByBillno(String billno){
         return repository.getByBillno(billno);
     }
+    public List<Bill>getBillByCustomer(Long customerid){
+        return repository.getByCustomerId(customerid);
+    }
+
 }

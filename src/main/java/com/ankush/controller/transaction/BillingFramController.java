@@ -25,6 +25,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 @Component
 public class BillingFramController implements Initializable {
@@ -115,7 +116,7 @@ public class BillingFramController implements Initializable {
     @FXML private DatePicker dateSearch;
     @FXML private TextField txtBillNoSearch;
     @FXML private TextField txtCustomerSearch;
-    @FXML private Button btnSearchBull;
+    @FXML private Button btnSearchAll;
     private Pane pane;
     @Autowired private CustomerService customerService;
     @Autowired private ItemService itemService;
@@ -129,10 +130,14 @@ public class BillingFramController implements Initializable {
     private ObservableList<Transaction> trList = FXCollections.observableArrayList();
     private ObservableList<ModeTransaction> modetrList = FXCollections.observableArrayList();
     private ObservableList<Bill> billList = FXCollections.observableArrayList();
+    private Long id;
+    private Long modeid;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         bill();
         mod();
+        id=null;
+        modeid = null;
         colSrNo.setCellValueFactory(new PropertyValueFactory<>("id"));
         colDate.setCellValueFactory(new PropertyValueFactory<>("date"));
         colBillNo.setCellValueFactory(new PropertyValueFactory<>("billno"));
@@ -141,11 +146,8 @@ public class BillingFramController implements Initializable {
         colCustomer.setCellValueFactory(cellData->new SimpleStringProperty(cellData.getValue().getCustomer().getCustomername()));
         billList.addAll(billService.getBillByDate(date.getValue()));
         tableOld.setItems(billList);
-
-
-
         cmbBank.getItems().addAll(bankService.getAllBankNames());
-
+        TextFields.bindAutoCompletion(txtCustomerSearch, customerNameProvide);
         btnSave.setOnAction(e->save());
         txtDiscount.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -157,24 +159,69 @@ public class BillingFramController implements Initializable {
         txtDiscount.setOnAction(e->calculatePayableAmount());
         btnUpdate2.setOnAction(e->updateBill());
         btnClear2.setOnAction(e->clearBill());
-    }
 
+        dateSearch.setOnAction(e->serchByDate());
+        txtBillNoSearch.setOnAction(e->searchByBillNo());
+        txtCustomerSearch.setOnAction(e->searchByCustomer());
+        btnSearchAll.setOnAction(e->searchAll());
+    }
     private void clearBill() {
+        id=null;
+        modeid =null;
+        txtBillNo.setText("A"+billService.getNewBillNo());
+        date.setValue(LocalDate.now());
+        txtModNo.setText("A"+modeService.getNewModeNo());
+        dateMod.setValue(LocalDate.now());
+        txtCustomer.setText("");
+        txtCustomerInformation.setText("");
+        trList.clear();
+        modetrList.clear();
+        txtNetTotal.setText(""+0.0f);
+        txtTotalMajuri.setText(""+0.0f);
+        txtGrandTotal.setText(""+0.0f);
+        txtBillAmount.setText(""+0.0f);
+        txtModeTotalAmount.setText(""+0.0f);
+        txtDiscount.setText(""+0.0f);
+        txtPayable.setText(""+0.0f);
+        txtPaid.setText(""+0.0f);
+        txtModNetTotal.setText(""+0.0f);
+        txtModGrandTotal.setText(""+0.0f);
+        rdbtnCash.setSelected(true);
+        cmbBank.getSelectionModel().clearSelection();
     }
-
     private void updateBill() {
         if(tableOld.getSelectionModel().getSelectedItem()==null) return;
+        clearBill();
         Bill bill = billService.getBillByBillno(tableOld.getSelectionModel().getSelectedItem().getBillno());
-        System.out.println(bill.getCustomer().getCustomername());
-
+        id = bill.getId();
+        txtBillNo.setText(bill.getBillno());
+        date.setValue(bill.getDate());
+        txtCustomer.setText(bill.getCustomer().getCustomername());
+        searchCustomer();
+        trList.clear();
+        for(Transaction tr:bill.getTransactions())
+           addInTransactionList(tr);
+        if(bill.getPaymode().equals("Cash")) rdbtnCash.setSelected(true);
+        else rdbtnCredit.setSelected(true);
+        cmbBank.setValue(bill.getBank().getName());
+        txtPaid.setText(String.valueOf(bill.getPaid()));
+        txtDiscount.setText(String.valueOf(bill.getDiscount()));
+        if(!bill.getModno().equals("0"))
+        {
+            Mode mode = modeService.getModeByModeNo(bill.getModno());
+            modeid = mode.getId();
+            for(ModeTransaction tr:mode.getModTransactions())
+            {
+                addModeInModeTransaction(tr);
+            }
+            txtModNo.setText(mode.getModeno());
+            dateMod.setValue(mode.getDate());
+        }
 
 
     }
-
     private void save() {
         if (!validateBill()) return;
-
-
         Mode mode = Mode.builder()
                 .amount(Float.parseFloat(txtModeTotalAmount.getText()))
                 .customer(customerService.getByCustomerName(txtCustomer.getText()))
@@ -183,15 +230,13 @@ public class BillingFramController implements Initializable {
                 .modeno(txtModNo.getText())
                 .payby("Bill")
                 .build();
-       for(ModeTransaction tr:modetrList)
-       {
+        if(modeid!=null)mode.setId(modeid);
+        for(ModeTransaction tr:modetrList)
+        {
            tr.setId(null);
            tr.setMode(mode);
            mode.getModTransactions().add(tr);
        }
-
-
-
         String paymode = rdbtnCash.isSelected()?"Cash":"credit";
         Bill bill = Bill.builder()
                 .transactions(new ArrayList<Transaction>())
@@ -210,7 +255,8 @@ public class BillingFramController implements Initializable {
         {
             bill.setModno("0");
         }
-        bill.setId(null);
+        if(id!=null) bill.setId(id);
+        else bill.setId(null);
         for(Transaction tr:trList)
         {
             tr.setId(null);
@@ -226,11 +272,21 @@ public class BillingFramController implements Initializable {
             System.out.println("Saved id "+mode.getId());
             alert.showSuccess("Bill Saved Success ");
             addInBIllList(bill);
+            clearBill();
+            return;
+        }
+        if(f==2)
+        {
+            if(!txtModeTotalAmount.getText().equals(""+0.0)) {
+                modeService.saveMode(mode);
+            }
+            alert.showSuccess("Bill update Success ");
+            addInBIllList(bill);
+            clearBill();
+            return;
         }
         //System.out.println(bill);
-
     }
-
     private void addInBIllList(Bill bill) {
         int index=-1;
         for(Bill b:billList)
@@ -252,7 +308,6 @@ public class BillingFramController implements Initializable {
             tableOld.refresh();
         }
     }
-
     private boolean validateBill() {
         if(trList.size()==0)
         {
@@ -391,7 +446,6 @@ public class BillingFramController implements Initializable {
         btnUpdate.setOnAction(e -> update());
         btnRemove.setOnAction(e -> remove());
     }
-
     private void remove() {
         if (tableBill.getSelectionModel().getSelectedItem() == null) return;
         Transaction tr = tableBill.getSelectionModel().getSelectedItem();
@@ -411,7 +465,6 @@ public class BillingFramController implements Initializable {
         trList.remove(tableBill.getSelectionModel().getSelectedIndex());
         tableBill.refresh();
     }
-
     private void update() {
         if (tableBill.getSelectionModel().getSelectedItem() == null) return;
         Transaction tr = tableBill.getSelectionModel().getSelectedItem();
@@ -423,7 +476,6 @@ public class BillingFramController implements Initializable {
         txtMajuri.setText(String.valueOf(tr.getMajuri() / tr.getQuantity()));
         txtAmount.setText(String.valueOf(tr.getAmount()));
     }
-
     private void clear() {
         txtItemName.setText("");
         cmbMetal.getSelectionModel().clearSelection();
@@ -433,7 +485,6 @@ public class BillingFramController implements Initializable {
         txtMajuri.setText("" + 0.0f);
         txtAmount.setText("" + 0.0f);
     }
-
     private void add() {
         if (!validateItem()) return;
         Transaction tr = Transaction.builder()
@@ -449,7 +500,6 @@ public class BillingFramController implements Initializable {
         clear();
 
     }
-
     private void addInTransactionList(Transaction t) {
         int index = -1;
         for (Transaction tr : trList) {
@@ -488,7 +538,6 @@ public class BillingFramController implements Initializable {
                 String.valueOf(Float.parseFloat(txtBillAmount.getText())- Float.parseFloat(txtModeTotalAmount.getText())-Float.parseFloat(txtDiscount.getText()))
         );
     }
-
     private boolean validateItem() {
         if (txtItemName.getText().isEmpty() || txtItemName.getText().trim().equals("")) {
             alert.showError("Enter Item Name");
@@ -516,7 +565,6 @@ public class BillingFramController implements Initializable {
 
         return true;
     }
-
     void calculateAmount() {
         if (txtRate.getText().isEmpty() || txtRate.getText().equals("")) txtRate.setText("" + 0.0);
         if (txtQty.getText().isEmpty() || txtQty.getText().equals("")) txtQty.setText("" + 0.0);
@@ -527,7 +575,6 @@ public class BillingFramController implements Initializable {
         );
 
     }
-
     private void searchCustomer() {
         if (txtCustomer.getText().isEmpty()) txtCustomer.requestFocus();
         Customer customer = customerService.getByCustomerName(txtCustomer.getText());
@@ -541,7 +588,6 @@ public class BillingFramController implements Initializable {
             );
         }
     }
-
     public static boolean isNumeric(String strNum) {
         if (strNum == null) {
             return false;
@@ -743,7 +789,27 @@ public class BillingFramController implements Initializable {
         );
     }
 
-
+    private void serchByDate() {
+        if(dateSearch.getValue()==null)return;
+        billList.clear();
+        billList.addAll(billService.getBillByDate(dateSearch.getValue()));
+    }
+    private void searchByBillNo() {
+        billList.clear();
+        if(billService.getBillByBillno(txtBillNoSearch.getText())==null) return;
+        billList.add(billService.getBillByBillno(txtBillNoSearch.getText()));
+    }
+    private void searchByCustomer() {
+        if(customerService.getByCustomerName(txtCustomerSearch.getText())!=null)
+        {
+            billList.clear();
+            billList.addAll(billService.getBillByCustomer(customerService.getByCustomerName(txtCustomerSearch.getText()).getId()));
+        }
+    }
+    private void searchAll() {
+        billList.clear();
+        billList.addAll(billService.getAllBills());
+    }
 
 
 }

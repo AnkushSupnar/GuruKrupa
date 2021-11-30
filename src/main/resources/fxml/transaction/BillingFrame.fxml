@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="725.0" prefWidth="1310.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ankush.controller.transaction.BillingFramController">
+<AnchorPane prefHeight="725.0" prefWidth="1449.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ankush.controller.transaction.BillingFramController">
    <children>
       <TabPane layoutX="10.0" layoutY="148.0" prefHeight="403.0" prefWidth="712.0" style="-fx-border-color: black;" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="172.0" AnchorPane.leftAnchor="12.0" AnchorPane.topAnchor="148.0">
         <tabs>
@@ -450,7 +450,7 @@
       <HBox layoutX="728.0" layoutY="28.0" spacing="5.0" AnchorPane.topAnchor="5.0">
          <children>
             <DatePicker fx:id="dateSearch" prefHeight="30.0" prefWidth="113.0" promptText="select Date" />
-            <TextField fx:id="txtBillNoSearch" promptText="Enter BillNo">
+            <TextField fx:id="txtBillNoSearch" prefHeight="30.0" prefWidth="169.0" promptText="Enter BillNo">
                <font>
                   <Font size="14.0" />
                </font>
@@ -460,7 +460,7 @@
                   <Font size="14.0" />
                </font>
             </TextField>
-            <Button fx:id="btnSearchBull" mnemonicParsing="false" prefHeight="30.0" stylesheets="@../css/button.css" text="SEARCH">
+            <Button fx:id="btnSearchAll" mnemonicParsing="false" prefHeight="30.0" stylesheets="@../css/button.css" text="ALL">
                <graphic>
                   <FontAwesomeIcon glyphName="SEARCH" />
                </graphic>

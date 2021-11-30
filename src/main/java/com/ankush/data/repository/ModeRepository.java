@@ -11,4 +11,6 @@ public interface ModeRepository extends JpaRepository<Mode, Long> {
 
     @Query("select max(id)+1 from Mode")
     Long getNewModeNo();
+
+    Mode getByModeno(String modeno);
 }

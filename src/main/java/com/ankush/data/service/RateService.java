@@ -49,6 +49,14 @@ public class RateService {
         return repository.getMetalNames();
     }
     public Rate getTodayRate(LocalDate date,String metal,String purity){
+        if(repository.getTodayRate(date,metal,purity)==null)
+            return Rate.builder()
+                    .metal(metal)
+                    .date(date)
+                    .rate(0.0f)
+                    .purity(purity)
+                    .build();
+        
         return repository.getTodayRate(date,metal,purity);
     }
 

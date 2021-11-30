@@ -25,4 +25,7 @@ public class ModeService {
         repository.save(mode);
         return 2;
     }
+    public Mode getModeByModeNo(String modeno){
+        return repository.getByModeno(modeno);
+    }
 }
