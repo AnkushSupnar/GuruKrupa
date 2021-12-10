@@ -217,6 +217,7 @@ public class BillingFramController implements Initializable {
             txtModNo.setText(mode.getModeno());
             dateMod.setValue(mode.getDate());
         }
+        calculatePayableAmount();
 
 
     }

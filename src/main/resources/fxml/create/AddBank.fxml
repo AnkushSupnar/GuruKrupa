@@ -15,12 +15,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<AnchorPane fx:id="mainPane" prefHeight="669.0" prefWidth="1236.0" stylesheets="@../css/addcustomer.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ankush.controller.create.AddBankController">
+<AnchorPane fx:id="mainPane" prefHeight="669.0" prefWidth="1236.0" stylesheets="@../css/addcustomer.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ankush.controller.create.AddBankController">
    <children>
       <StackPane prefHeight="42.0" prefWidth="731.0" style="-fx-background-color: #2262C6;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Add New Bank Account">
+            <Text fill="WHITE" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="Add New Bank Account">
                <font>
                   <Font name="Georgia" size="16.0" />
                </font>
@@ -37,12 +36,12 @@
                   <Insets />
                </VBox.margin>
                <children>
-                  <FontAwesomeIcon glyphName="USER_PLUS" size="7em" />
+                  <FontAwesomeIcon glyphName="BANK" size="7em" />
                </children>
             </StackPane>
             <Label text="Bank Name">
                <VBox.margin>
-                  <Insets left="10.0" right="10.0" />
+                  <Insets left="10.0" right="10.0" top="20.0" />
                </VBox.margin>
             </Label>
             <TextField fx:id="txtBankName" promptText="Enter Customer Name" VBox.vgrow="NEVER">

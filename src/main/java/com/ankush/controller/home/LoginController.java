@@ -128,7 +128,7 @@ public class LoginController implements Initializable {
         if(cmbUserName.getValue().equals("Admin") && txtPassword.getText().equals("123"))
         {
             alert.showSuccess("Login Success");
-            stageManager.switchScene(FxmlView.HOME);
+            stageManager.switchScene(FxmlView.CUSTOMER);
         }
         else{
             alert.showError("Enter Correct Password");
