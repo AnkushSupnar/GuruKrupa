@@ -13,6 +13,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import org.controlsfx.control.textfield.TextFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import java.net.URL;
@@ -49,20 +50,34 @@ public class PurchasePartyController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         id = null;
+        TextFields.bindAutoCompletion(txtSearchParty,service.getAllPartyNames());
         colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
         colContact.setCellValueFactory(new PropertyValueFactory<>("contact"));
         colGst.setCellValueFactory(new PropertyValueFactory<>("gst"));
         colPan.setCellValueFactory(new PropertyValueFactory<>("pan"));
-        colName.setCellValueFactory(new PropertyValueFactory<>("pan"));
+        colName.setCellValueFactory(new PropertyValueFactory<>("name"));
         colSrno.setCellValueFactory(new PropertyValueFactory<>("id"));
         table.setItems(list);
         btnSave.setOnAction(e->save());
         btnUpdate.setOnAction(e->update());
         btnClear.setOnAction(e->clear());
+        btnShow.setOnAction(e->showAll());
+        btnSearch.setOnAction(e->search());
     }
 
+    private void search() {
+        if(txtSearchParty.getText().isEmpty()) txtSearchParty.requestFocus();
+        list.clear();
+        if(service.getPartyByName(txtSearchParty.getText())!=null)
+        {
+            list.addAll(service.getPartyByName(txtSearchParty.getText()));
+        }
+    }
 
-
+    private void showAll() {
+        list.clear();
+        list.addAll(service.getAllPurchaseParty());
+    }
 
     private void save() {
         if(!validate()) return;
@@ -80,12 +95,14 @@ public class PurchasePartyController implements Initializable {
         {
             alert.showSuccess("Purchase Party Saved Success");
             addInList(party);
+            clear();
 
         }
         else if(flag==2)
         {
             alert.showSuccess("Purchase party Updated Success");
             addInList(party);
+            clear();
         }
     }
     private boolean validate() {

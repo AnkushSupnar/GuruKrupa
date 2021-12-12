@@ -2,10 +2,16 @@ package com.ankush.data.repository;
 
 import com.ankush.data.entities.PurchaseParty;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface PurchasePartyRepository extends JpaRepository<PurchaseParty, Integer> {
 
-    PurchaseParty getByName(String name);
+    List<PurchaseParty> getByName(String name);
+
+    @Query("select name from PurchaseParty")
+    List<String>getAllNames();
 }

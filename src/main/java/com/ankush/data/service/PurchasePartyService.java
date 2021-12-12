@@ -17,7 +17,7 @@ public class PurchasePartyService {
     public List<PurchaseParty>getAllPurchaseParty(){
       return repository.findAll();
     }
-    public PurchaseParty getPartyByName(String name){
+    public List<PurchaseParty> getPartyByName(String name){
         return repository.getByName(name);
     }
     public int savePurchaseParty(PurchaseParty party)
@@ -31,5 +31,8 @@ public class PurchasePartyService {
             repository.save(party);
             return 2;
         }
+    }
+    public List<String>getAllPartyNames(){
+        return repository.getAllNames();
     }
 }
