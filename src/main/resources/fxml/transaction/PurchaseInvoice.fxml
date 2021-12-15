@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane prefHeight="741.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ankush.controller.transaction.PurchaseInvoiceController">
+   <children>
+      <StackPane layoutX="119.0" layoutY="14.0" prefHeight="37.0" prefWidth="600.0" styleClass="title" stylesheets="@../css/title.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="title-text" text="Purchase Invoice" />
+         </children>
+      </StackPane>
+      <Pane layoutX="22.0" layoutY="37.0" prefHeight="190.0" prefWidth="644.0" styleClass="box" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="40.0">
+         <children>
+            <HBox layoutX="14.0" layoutY="7.0" spacing="10.0">
+               <children>
+                  <Label text="Invoice No">
+                     <HBox.margin>
+                        <Insets top="5.0" />
+                     </HBox.margin>
+                  </Label>
+                  <TextField>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Label text="Date">
+                     <HBox.margin>
+                        <Insets top="5.0" />
+                     </HBox.margin>
+                  </Label>
+                  <DatePicker prefHeight="30.0" prefWidth="126.0" promptText="Select Date" />
+               </children>
+            </HBox>
+            <HBox layoutX="14.0" layoutY="43.0" spacing="5.0">
+               <children>
+                  <Label text="Party Name" />
+                  <TextField prefHeight="25.0" prefWidth="342.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Button mnemonicParsing="false" text="Button">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <graphic>
+                        <FontAwesomeIcon glyphName="SEARCH" />
+                     </graphic>
+                  </Button>
+                  <Button mnemonicParsing="false" text="NEW">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <graphic>
+                        <FontAwesomeIcon glyphName="PLUS" />
+                     </graphic>
+                  </Button>
+               </children>
+            </HBox>
+            <Label layoutX="14.0" layoutY="76.0" text="Party Information">
+               <graphic>
+                  <FontAwesomeIcon glyphName="INFO_CIRCLE" />
+               </graphic>
+            </Label>
+            <TextArea layoutX="14.0" layoutY="91.0" prefHeight="92.0" prefWidth="560.0" />
+         </children>
+      </Pane>
+      <Pane layoutX="5.0" layoutY="234.0" prefHeight="183.0" prefWidth="644.0" styleClass="box" AnchorPane.leftAnchor="5.0">
+         <children>
+            <Label text="Item Information">
+               <graphic>
+                  <FontAwesomeIcon glyphName="INFO_CIRCLE" />
+               </graphic>
+            </Label>
+            <Label layoutX="14.0" layoutY="22.0" text="Item HSN" />
+            <Label layoutX="113.0" layoutY="22.0" text="Item Name" />
+            <Label layoutX="449.0" layoutY="22.0" text="Item Metal" />
+            <Label layoutX="10.0" layoutY="80.0" text="Metal Rate/10gm" />
+            <Label layoutX="118.0" layoutY="80.0" text="Weight(gm)" />
+            <Label layoutX="228.0" layoutY="80.0" text="Quantity(Nos)" />
+            <Label layoutX="331.0" layoutY="80.0" text="Amount" />
+            <HBox layoutX="9.0" layoutY="40.0" spacing="5.0">
+               <children>
+                  <TextField maxWidth="100.0" promptText="HSN">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <TextField maxWidth="337.0" prefHeight="30.0" prefWidth="326.0" promptText="Item Name">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <ComboBox prefHeight="30.0" prefWidth="96.0" promptText="Silver" />
+                  <ComboBox prefHeight="30.0" prefWidth="97.0" promptText="Purity" />
+               </children>
+            </HBox>
+            <Label layoutX="550.0" layoutY="22.0" text="Purity" />
+            <HBox layoutX="9.0" layoutY="98.0" spacing="5.0">
+               <children>
+                  <TextField maxWidth="100.0" promptText="Rate">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <TextField maxWidth="100.0" promptText="Weight">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <TextField maxWidth="100.0" promptText="Quantity">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <TextField maxWidth="100.0" promptText="Amount">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </HBox>
+            <HBox layoutX="12.0" layoutY="142.0" spacing="20.0">
+               <children>
+                  <Button mnemonicParsing="false" text="ADD">
+                     <graphic>
+                        <FontAwesomeIcon glyphName="CART_PLUS" />
+                     </graphic>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" text="UPDATE">
+                     <graphic>
+                        <FontAwesomeIcon glyphName="CART_PLUS" />
+                     </graphic>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" text="REMOVE">
+                     <graphic>
+                        <FontAwesomeIcon glyphName="CART_PLUS" />
+                     </graphic>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" text="CLEAR">
+                     <graphic>
+                        <FontAwesomeIcon glyphName="CART_PLUS" />
+                     </graphic>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </Pane>
+      <TableView layoutX="14.0" layoutY="417.0" prefHeight="200.0" prefWidth="644.0" AnchorPane.leftAnchor="5.0">
+        <columns>
+          <TableColumn prefWidth="42.0" text="SR.NO" />
+          <TableColumn prefWidth="100.0" text="HSN" />
+            <TableColumn prefWidth="120.0" text="ITEM NAME" />
+            <TableColumn prefWidth="60.0" text="METAL" />
+            <TableColumn prefWidth="60.0" text="PURITY" />
+            <TableColumn prefWidth="100.0" text="RATE" />
+            <TableColumn prefWidth="64.0" text="QTY" />
+            <TableColumn prefWidth="100.0" text="AMOUNT" />
+        </columns>
+      </TableView>
+      <Pane layoutX="25.0" layoutY="624.0" prefHeight="120.0" prefWidth="644.0" styleClass="box" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0">
+         <children>
+            <Label layoutX="14.0" layoutY="6.0" text="Net Total" />
+            <TextField layoutX="14.0" layoutY="23.0" maxWidth="100.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+            <Label layoutX="122.0" layoutY="6.0" text="Labour Chargs" />
+            <TextField layoutX="122.0" layoutY="23.0" maxWidth="100.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+            <Label layoutX="230.0" layoutY="6.0" text="Other Charges" />
+            <TextField layoutX="230.0" layoutY="23.0" maxWidth="100.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+         </children>
+      </Pane>
+   </children>
+   <stylesheets>
+      <URL value="@../css/purchase.css" />
+      <URL value="@../css/button.css" />
+   </stylesheets>
+</AnchorPane>
