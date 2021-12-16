@@ -27,4 +27,10 @@ public class Item {
     @Column(name = "purity")
     private String purity;
 
+    @Column(name = "majurirate")
+    private Float majurirate;
+
+    @Column(name = "hsn")
+    private Long hsn;
+
 }

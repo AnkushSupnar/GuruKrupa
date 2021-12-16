@@ -2,6 +2,7 @@ package com.ankush.common;
 
 import com.ankush.data.entities.Login;
 import com.ankush.view.AlertNotification;
+import impl.org.controlsfx.autocompletion.SuggestionProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +15,7 @@ public class CommonData {
 
     public static List<String>ITEMNAMES = new ArrayList<>();
     public static List<String>customerNames = new ArrayList<>();
+    public static SuggestionProvider<String>PARTYNAMES;
     public CommonData() {
         super();
     }
@@ -32,5 +34,14 @@ public class CommonData {
 
     public static void setITEMNAMES(List<String> ITEMNAMES) {
         CommonData.ITEMNAMES.addAll(ITEMNAMES);
+    }
+
+    public static void setPARTYNAMES(List<String>names)
+    {
+        PARTYNAMES = SuggestionProvider.create(names);
+    }
+    public static SuggestionProvider<String> getPARTYNAMES()
+    {
+        return PARTYNAMES;
     }
 }

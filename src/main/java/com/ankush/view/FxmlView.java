@@ -44,6 +44,16 @@ public enum FxmlView {
             return "/fxml/create/AddBank.fxml";
         }
     },
+    PURCHASE {
+        @Override
+        String getTitle() {
+            return "Purchase Invoice";
+        }
+        @Override
+        public String getFxmlFile() {
+            return "/fxml/transaction/PurchaseInvoice.fxml";
+        }
+    },
     BILLING {
         @Override
         String getTitle() {

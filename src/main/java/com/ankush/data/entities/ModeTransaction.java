@@ -34,6 +34,7 @@ public class ModeTransaction {
     @Column(name = "weight")
     private Float weight;
 
+
     @Column(name = "ghat")
     private Float ghat;
 
@@ -46,5 +47,11 @@ public class ModeTransaction {
     @ManyToOne
     @JoinColumn(name = "modeid")
     private Mode mode;
+
+    @Column(name = "majurirate")
+    private Float majurirate;
+
+    @Column(name = "majuri")
+    private Float majuri;
 
 }
