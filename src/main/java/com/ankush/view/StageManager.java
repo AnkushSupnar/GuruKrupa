@@ -90,5 +90,8 @@ public class StageManager {
     private void logAndExit(String errorMsg, Exception e) {
         LOG.error(errorMsg, e, e.getCause());
     }
-
+    public SpringFXMLLoader getFxmlLoader()
+    {
+        return springFXMLLoader;
+    }
 }

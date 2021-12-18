@@ -24,10 +24,10 @@ public class RateService {
     {
         return repository.getByDateAndPurity(date,purity);
     }
-    private Rate getByDateAndMetal(LocalDate date, String metal) {
+    public Rate getByDateAndMetal(LocalDate date, String metal) {
         return repository.getByDateAndMetal(date,metal);
     }
-    private Rate getByDateAndMetalAndPurity(LocalDate date,String metal,String purity)
+    public Rate getByDateAndMetalAndPurity(LocalDate date,String metal,String purity)
     {
         return repository.getByDateAndMetalAndPurity(date,metal.toLowerCase(),purity.toLowerCase());
     }
