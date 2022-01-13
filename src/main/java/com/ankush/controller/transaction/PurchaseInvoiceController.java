@@ -2,6 +2,7 @@ package com.ankush.controller.transaction;
 
 import com.ankush.data.entities.PurchaseParty;
 import com.ankush.data.entities.PurchaseTransaction;
+import com.ankush.data.entities.Transaction;
 import com.ankush.data.service.ItemStockService;
 import com.ankush.data.service.PurchasePartyService;
 import com.ankush.data.service.RateService;
@@ -30,6 +31,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -72,6 +74,7 @@ public class PurchaseInvoiceController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         party = null;
+        date.setValue(LocalDate.now());
         cmbMetal.getItems().addAll(rateService.getMetalNames());
         cmbPurity.getItems().addAll(rateService.getPurityNames());
         partyNameProvider = SuggestionProvider.create(partyService.getAllPartyNames());
@@ -92,6 +95,23 @@ public class PurchaseInvoiceController implements Initializable {
         btnNew.setOnAction(e->showAddParty(e));
         setTextProperties();
         btnAdd.setOnAction(e->add());
+        btnUpdate.setOnAction(e->update());
+    }
+
+
+    private void update() {
+        if(tableTr.getSelectionModel().getSelectedItem()==null)return;
+        PurchaseTransaction tr = tableTr.getSelectionModel().getSelectedItem();
+        txtAmount.setText(String.valueOf(tr.getAmount()));
+        txtHsn.setText(String.valueOf(tr.getHsn()));
+        txtItemName.setText(tr.getItemname());
+        txtMajuriRate.setText(String.valueOf(tr.getMajurirate()));
+        txtTotalMajuri.setText(String.valueOf(tr.getMajuri()));
+        txtRate.setText(String.valueOf(tr.getRate()));
+        cmbMetal.setValue(tr.getMetal());
+        cmbPurity.setValue(tr.getPurity());
+        
+        
     }
 
 
@@ -280,7 +300,7 @@ public class PurchaseInvoiceController implements Initializable {
                     String.valueOf(
                             (
                               Float.parseFloat(txtTotalMajuri.getText())/Float.parseFloat(txtWeight.getText())
-                            )*Float.parseFloat(txtQuantity.getText())
+                            )/Float.parseFloat(txtQuantity.getText())
                     )
             );
             calculateAmount();

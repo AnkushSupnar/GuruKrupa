@@ -100,7 +100,7 @@
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <ComboBox fx:id="cmbMetal" prefHeight="30.0" prefWidth="85.0" promptText="Silver" />
+                  <ComboBox fx:id="cmbMetal" prefHeight="30.0" prefWidth="85.0" promptText="Metal" />
                   <ComboBox fx:id="cmbPurity" prefHeight="30.0" prefWidth="97.0" promptText="Purity" />
                </children>
             </HBox>
@@ -179,7 +179,7 @@
             <Label layoutX="533.0" layoutY="78.0" text="Amount" />
          </children>
       </Pane>
-      <TableView fx:id="tableTr" layoutX="5.0" layoutY="371.0" prefHeight="200.0" prefWidth="644.0" AnchorPane.leftAnchor="5.0">
+      <TableView fx:id="tableTr" layoutX="5.0" layoutY="371.0" prefHeight="200.0" prefWidth="644.0" AnchorPane.bottomAnchor="158.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="371.0">
         <columns>
           <TableColumn fx:id="colNo" prefWidth="27.0" text="NO" />
           <TableColumn fx:id="colHsn" prefWidth="84.0" text="HSN" />
