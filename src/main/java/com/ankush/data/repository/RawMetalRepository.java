@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RawMetalRepository extends JpaRepository<RawMetal,Integer> {
  
-    RawMetal findByMetalAndPurit(String metal,String purity);
+    RawMetal findByMetalAndPurity(String metal,String purity);
 }

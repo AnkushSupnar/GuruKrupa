@@ -318,12 +318,25 @@ public class PurchaseInvoiceController implements Initializable {
 
         txtTotalMajuri.setText(
                 String.valueOf(
-                        (Float.parseFloat(txtMajuriRate.getText())*Float.parseFloat(txtWeight.getText())*
-                                Float.parseFloat(txtQuantity.getText()))
-                )
+                        (Float.parseFloat(txtMajuriRate.getText())*Float.parseFloat(txtWeight.getText())))             
         );
+        // txtAmount.setText(
+        //         String.valueOf(
+        //             (
+        //                 (
+        //                     (
+        //                         Float.parseFloat(txtRate.getText())/10)*Float.parseFloat(txtWeight.getText()))* Float.parseFloat(txtQuantity.getText()))
+        //         +(Float.parseFloat(txtTotalMajuri.getText()))
+        //         )
+        // );
         txtAmount.setText(
-                String.valueOf((((Float.parseFloat(txtRate.getText())/10)*Float.parseFloat(txtWeight.getText()))* Float.parseFloat(txtQuantity.getText()))
+                String.valueOf(
+                    (
+                        (
+                            (Float.parseFloat(txtRate.getText())/10)
+                            *Float.parseFloat(txtWeight.getText())
+                        )                            
+                    )
                 +(Float.parseFloat(txtTotalMajuri.getText()))
                 )
         );

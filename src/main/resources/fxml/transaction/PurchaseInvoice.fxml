@@ -7,6 +7,8 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
@@ -16,7 +18,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="729.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ankush.controller.transaction.PurchaseInvoiceController">
+<AnchorPane prefHeight="729.0" prefWidth="1232.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ankush.controller.transaction.PurchaseInvoiceController">
    <children>
       <Pane layoutX="5.0" layoutY="38.0" prefHeight="190.0" prefWidth="644.0" styleClass="box" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
          <children>
@@ -71,131 +73,13 @@
                   <FontAwesomeIcon fill="#8cbcf3" glyphName="INFO_CIRCLE" />
                </graphic>
             </Label>
-            <TextArea fx:id="txtPartyInfo" layoutX="14.0" layoutY="90.0" prefHeight="92.0" prefWidth="623.0" />
+            <TextArea fx:id="txtPartyInfo" layoutX="10.0" layoutY="90.0" prefHeight="92.0" prefWidth="623.0" />
          </children>
       </Pane>
-      <Pane layoutX="5.0" layoutY="196.0" prefHeight="174.0" prefWidth="644.0" styleClass="box" AnchorPane.leftAnchor="5.0">
-         <children>
-            <Label text="Item Information" textFill="#8cbcf3">
-               <graphic>
-                  <FontAwesomeIcon fill="#8cbcf3" glyphName="INFO_CIRCLE" />
-               </graphic>
-            </Label>
-            <Label layoutX="14.0" layoutY="16.0" text="Item HSN" />
-            <Label layoutX="113.0" layoutY="16.0" text="Item Name" />
-            <Label layoutX="449.0" layoutY="16.0" text="Item Metal" />
-            <Label layoutX="10.0" layoutY="78.0" text="Metal Rate/10gm" />
-            <Label layoutX="118.0" layoutY="78.0" text="Weight(gm)" />
-            <Label layoutX="228.0" layoutY="78.0" text="Majuri/gm" />
-            <Label layoutX="331.0" layoutY="78.0" text="Quantity(Nos)" />
-            <HBox layoutX="9.0" layoutY="32.0" spacing="5.0">
-               <children>
-                  <TextField fx:id="txtHsn" maxWidth="100.0" promptText="HSN">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
-                  <TextField fx:id="txtItemName" maxWidth="337.0" prefHeight="30.0" prefWidth="326.0" promptText="Item Name">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
-                  <ComboBox fx:id="cmbMetal" prefHeight="30.0" prefWidth="85.0" promptText="Metal" />
-                  <ComboBox fx:id="cmbPurity" prefHeight="30.0" prefWidth="97.0" promptText="Purity" />
-               </children>
-            </HBox>
-            <Label layoutX="550.0" layoutY="16.0" text="Purity" />
-            <HBox layoutX="9.0" layoutY="98.0" spacing="5.0">
-               <children>
-                  <TextField fx:id="txtRate" maxWidth="100.0" promptText="Rate">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
-                  <TextField fx:id="txtWeight" maxWidth="100.0" promptText="Weight">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
-                  <TextField fx:id="txtMajuriRate" layoutX="115.0" layoutY="10.0" maxWidth="100.0" promptText="Majuri">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
-                  <TextField fx:id="txtQuantity" maxWidth="100.0" promptText="Quantity">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
-                  <TextField fx:id="txtTotalMajuri" maxWidth="100.0" promptText="Total Majuri">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
-                  <TextField fx:id="txtAmount" editable="false" layoutX="430.0" layoutY="10.0" maxWidth="100.0" promptText="Amount" text="0.0">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
-               </children>
-            </HBox>
-            <HBox layoutX="12.0" layoutY="134.0" spacing="20.0">
-               <children>
-                  <Button fx:id="btnAdd" mnemonicParsing="false" text="ADD">
-                     <graphic>
-                        <FontAwesomeIcon glyphName="CART_PLUS" />
-                     </graphic>
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Button>
-                  <Button fx:id="btnUpdate" mnemonicParsing="false" text="UPDATE">
-                     <graphic>
-                        <FontAwesomeIcon glyphName="CART_PLUS" />
-                     </graphic>
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Button>
-                  <Button fx:id="btnRemove" mnemonicParsing="false" text="REMOVE">
-                     <graphic>
-                        <FontAwesomeIcon glyphName="CART_PLUS" />
-                     </graphic>
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Button>
-                  <Button fx:id="btnClear" mnemonicParsing="false" text="CLEAR">
-                     <graphic>
-                        <FontAwesomeIcon glyphName="CART_PLUS" />
-                     </graphic>
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Button>
-               </children>
-            </HBox>
-            <Label layoutX="434.0" layoutY="78.0" text="Total Majuri" />
-            <Label layoutX="533.0" layoutY="78.0" text="Amount" />
-         </children>
-      </Pane>
-      <TableView fx:id="tableTr" layoutX="5.0" layoutY="371.0" prefHeight="200.0" prefWidth="644.0" AnchorPane.bottomAnchor="158.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="371.0">
-        <columns>
-          <TableColumn fx:id="colNo" prefWidth="27.0" text="NO" />
-          <TableColumn fx:id="colHsn" prefWidth="84.0" text="HSN" />
-            <TableColumn fx:id="colItemName" prefWidth="136.0" text="ITEM NAME" />
-            <TableColumn fx:id="colMetal" prefWidth="46.0" text="METAL" />
-            <TableColumn fx:id="colPurity" prefWidth="46.0" text="PURITY" />
-            <TableColumn fx:id="colRate" prefWidth="96.0" text="RATE" />
-            <TableColumn fx:id="colQty" prefWidth="55.0" text="QTY" />
-            <TableColumn fx:id="colMajuri" prefWidth="71.0" text="MAJURI" />
-            <TableColumn fx:id="colAmount" prefWidth="81.0" text="AMOUNT" />
-        </columns>
-      </TableView>
       <Pane layoutX="5.0" layoutY="581.0" prefHeight="156.0" prefWidth="644.0" styleClass="box" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0">
          <children>
             <Label layoutX="14.0" layoutY="6.0" text="Net Total" />
-            <HBox layoutX="14.0" layoutY="22.0" spacing="10.0">
+            <HBox layoutX="14.0" layoutY="22.0" spacing="2.0">
                <children>
                   <TextField fx:id="txtNetTotal" editable="false" maxWidth="100.0" text="0.0">
                      <font>
@@ -207,12 +91,17 @@
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <TextField fx:id="txtOther" maxWidth="100.0">
+                  <TextField fx:id="txtOther" maxWidth="100.0" text="0.0">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <TextField fx:id="txtDiscount" maxWidth="100.0">
+                  <TextField fx:id="txtDiscount" maxWidth="100.0" text="0.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <TextField fx:id="txtModTotal" layoutX="341.0" layoutY="10.0" maxWidth="100.0" promptText="mode amount" text="0.0">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -227,15 +116,15 @@
             <Label layoutX="122.0" layoutY="6.0" text="Labour Chargs" />
             <Label layoutX="230.0" layoutY="6.0" text="Other Charges" />
             <Label layoutX="338.0" layoutY="6.0" text="Discount" />
-            <Label layoutX="451.0" layoutY="2.0" text="Grand Total" />
-            <HBox layoutX="11.0" layoutY="63.0">
+            <Label layoutX="428.0" layoutY="6.0" text="Mode Total" />
+            <HBox layoutX="11.0" layoutY="63.0" spacing="5.0">
                <children>
                   <Label text="Bank Name">
                      <HBox.margin>
                         <Insets top="5.0" />
                      </HBox.margin>
                   </Label>
-                  <ComboBox fx:id="cmbBankName" prefHeight="30.0" prefWidth="150.0" promptText="Select Bank Name" />
+                  <ComboBox fx:id="cmbBankName" prefHeight="30.0" prefWidth="198.0" promptText="Select Bank Name" stylesheets="@../css/combobox.css" />
                   <Label text="Paid Amount">
                      <HBox.margin>
                         <Insets top="5.0" />
@@ -284,8 +173,219 @@
                   </Button>
                </children>
             </HBox>
+            <Label layoutX="551.0" layoutY="2.0" text="Grand Total" />
          </children>
       </Pane>
+      <TabPane layoutX="14.0" layoutY="195.0" prefHeight="373.0" prefWidth="644.0" styleClass="box" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="161.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="194.39999999999998">
+        <tabs>
+          <Tab text="NEW ITEM">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Pane layoutX="207.0" layoutY="73.0" prefHeight="174.0" prefWidth="644.0" styleClass="box" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Label text="Item Information" textFill="#8cbcf3">
+                                 <graphic>
+                                    <FontAwesomeIcon fill="#8cbcf3" glyphName="INFO_CIRCLE" />
+                                 </graphic>
+                              </Label>
+                              <Label layoutX="14.0" layoutY="16.0" text="Item HSN" />
+                              <Label layoutX="113.0" layoutY="16.0" text="Item Name" />
+                              <Label layoutX="449.0" layoutY="16.0" text="Item Metal" />
+                              <Label layoutX="10.0" layoutY="78.0" text="Metal Rate/10gm" />
+                              <Label layoutX="118.0" layoutY="78.0" text="Weight(gm)" />
+                              <Label layoutX="228.0" layoutY="78.0" text="Majuri/gm" />
+                              <Label layoutX="331.0" layoutY="78.0" text="Quantity(Nos)" />
+                              <HBox layoutX="9.0" layoutY="32.0" spacing="5.0">
+                                 <children>
+                                    <TextField fx:id="txtHsn" maxWidth="100.0" promptText="HSN">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                                    <TextField fx:id="txtItemName" maxWidth="337.0" prefHeight="30.0" prefWidth="326.0" promptText="Item Name">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                                    <ComboBox fx:id="cmbMetal" prefHeight="30.0" prefWidth="85.0" promptText="Metal" stylesheets="@../css/combobox.css" />
+                                    <ComboBox fx:id="cmbPurity" prefHeight="30.0" prefWidth="97.0" promptText="Purity" stylesheets="@../css/combobox.css" />
+                                 </children>
+                              </HBox>
+                              <Label layoutX="550.0" layoutY="16.0" text="Purity" />
+                              <HBox layoutX="9.0" layoutY="98.0" spacing="5.0">
+                                 <children>
+                                    <TextField fx:id="txtRate" maxWidth="100.0" promptText="Rate">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                                    <TextField fx:id="txtWeight" maxWidth="100.0" promptText="Weight">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                                    <TextField fx:id="txtMajuriRate" layoutX="115.0" layoutY="10.0" maxWidth="100.0" promptText="Majuri">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                                    <TextField fx:id="txtQuantity" maxWidth="100.0" promptText="Quantity">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                                    <TextField fx:id="txtTotalMajuri" maxWidth="100.0" promptText="Total Majuri">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                                    <TextField fx:id="txtAmount" editable="false" layoutX="430.0" layoutY="10.0" maxWidth="100.0" promptText="Amount" text="0.0">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                                 </children>
+                              </HBox>
+                              <HBox layoutX="12.0" layoutY="134.0" spacing="20.0">
+                                 <children>
+                                    <Button fx:id="btnAdd" mnemonicParsing="false" text="ADD">
+                                       <graphic>
+                                          <FontAwesomeIcon glyphName="CART_PLUS" />
+                                       </graphic>
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Button>
+                                    <Button fx:id="btnUpdate" mnemonicParsing="false" text="UPDATE">
+                                       <graphic>
+                                          <FontAwesomeIcon glyphName="CART_PLUS" />
+                                       </graphic>
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Button>
+                                    <Button fx:id="btnRemove" mnemonicParsing="false" text="REMOVE">
+                                       <graphic>
+                                          <FontAwesomeIcon glyphName="CART_PLUS" />
+                                       </graphic>
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Button>
+                                    <Button fx:id="btnClear" mnemonicParsing="false" text="CLEAR">
+                                       <graphic>
+                                          <FontAwesomeIcon glyphName="CART_PLUS" />
+                                       </graphic>
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <Label layoutX="434.0" layoutY="78.0" text="Total Majuri" />
+                              <Label layoutX="533.0" layoutY="78.0" text="Amount" />
+                           </children>
+                        </Pane>
+                        <TableView fx:id="tableTr" layoutX="214.0" layoutY="182.0" prefHeight="156.0" prefWidth="650.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="182.0">
+                          <columns>
+                            <TableColumn fx:id="colNo" prefWidth="27.0" text="NO" />
+                            <TableColumn fx:id="colHsn" prefWidth="84.0" text="HSN" />
+                              <TableColumn fx:id="colItemName" prefWidth="136.0" text="ITEM NAME" />
+                              <TableColumn fx:id="colMetal" prefWidth="46.0" text="METAL" />
+                              <TableColumn fx:id="colPurity" prefWidth="46.0" text="PURITY" />
+                              <TableColumn fx:id="colRate" prefWidth="96.0" text="RATE" />
+                              <TableColumn fx:id="colQty" prefWidth="55.0" text="QTY" />
+                              <TableColumn fx:id="colMajuri" prefWidth="71.0" text="MAJURI" />
+                              <TableColumn fx:id="colAmount" prefWidth="81.0" text="AMOUNT" />
+                          </columns>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="MOD">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="14.0" layoutY="17.0" text="Metal Name" />
+                        <Label layoutX="190.0" layoutY="17.0" text="Purity" />
+                        <HBox layoutX="13.0" layoutY="35.0" spacing="10.0">
+                           <children>
+                              <ComboBox fx:id="cmbModeMetal" prefHeight="30.0" prefWidth="138.0" promptText="Metal Name" stylesheets="@../css/combobox.css" />
+                              <ComboBox fx:id="cmbModePurity" prefHeight="30.0" prefWidth="91.0" promptText="Purity" stylesheets="@../css/combobox.css" />
+                              <TextField fx:id="txtModeRate" prefWidth="100.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                              <TextField fx:id="txtModeWeight" layoutX="356.0" layoutY="10.0" prefWidth="100.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                              <TextField fx:id="txtModeAmount" layoutX="371.0" layoutY="10.0" prefWidth="100.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                           </children>
+                        </HBox>
+                        <Label layoutX="376.0" layoutY="17.0" text="Rate/10gm" />
+                        <HBox layoutX="15.0" layoutY="80.0" spacing="10.0">
+                           <children>
+                              <Button fx:id="btnModAdd" mnemonicParsing="false" text="ADD">
+                                 <graphic>
+                                    <FontAwesomeIcon glyphName="PLUS" />
+                                 </graphic>
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="btnModUpdate" mnemonicParsing="false" text="UPDATE">
+                                 <graphic>
+                                    <FontAwesomeIcon glyphName="EDIT" />
+                                 </graphic>
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="btnModRemove" mnemonicParsing="false" text="REMOVE">
+                                 <graphic>
+                                    <FontAwesomeIcon glyphName="CLOSE" />
+                                 </graphic>
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="btnModClear" mnemonicParsing="false" text="CLEAR">
+                                 <graphic>
+                                    <FontAwesomeIcon glyphName="CLOSE" />
+                                 </graphic>
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </HBox>
+                        <TableView fx:id="tableMod" layoutX="10.0" layoutY="122.0" prefHeight="218.0" prefWidth="624.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="122.0">
+                          <columns>
+                            <TableColumn fx:id="colModeSr" prefWidth="75.0" text="SR.NO" />
+                            <TableColumn fx:id="colModMetal" prefWidth="175.2000274658203" text="METAL NAME" />
+                              <TableColumn fx:id="colModPurity" prefWidth="63.20001220703125" text="PURITY" />
+                              <TableColumn fx:id="colModWeight" prefWidth="97.5999755859375" text="WEIGHT" />
+                              <TableColumn fx:id="colModRate" prefWidth="101.60003662109375" text="RATE" />
+                              <TableColumn fx:id="colModAmount" prefWidth="109.60003662109375" text="AMOUNT" />
+                          </columns>
+                        </TableView>
+                        <Label layoutX="488.0" layoutY="17.0" text="Amount" />
+                        <Label layoutX="265.0" layoutY="17.0" text="Rate/10gm" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
    </children>
    <stylesheets>
       <URL value="@../css/purchase.css" />

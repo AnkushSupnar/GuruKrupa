@@ -32,7 +32,7 @@ public class RawMetalService {
     }
     public RawMetal getByMetalAndPurity(String metal,String purity)
     {
-        return repository.findByMetalAndPurit(metal, purity);
+        return repository.findByMetalAndPurity(metal, purity);
     }
     public int reduceWeight(RawMetal raw)
     {
