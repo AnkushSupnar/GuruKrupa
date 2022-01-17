@@ -1,13 +1,26 @@
 package com.ankush.controller.transaction;
 
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
+import java.util.ResourceBundle;
+
+import com.ankush.data.entities.PurchaseMode;
 import com.ankush.data.entities.PurchaseParty;
 import com.ankush.data.entities.PurchaseTransaction;
-import com.ankush.data.entities.Transaction;
+import com.ankush.data.entities.RawMetal;
 import com.ankush.data.service.ItemStockService;
 import com.ankush.data.service.PurchasePartyService;
 import com.ankush.data.service.RateService;
+import com.ankush.data.service.RawMetalService;
 import com.ankush.view.AlertNotification;
 import com.ankush.view.StageManager;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
 import impl.org.controlsfx.autocompletion.AutoCompletionTextFieldBinding;
 import impl.org.controlsfx.autocompletion.SuggestionProvider;
 import javafx.beans.value.ChangeListener;
@@ -21,20 +34,17 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
-
-import java.net.URL;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
 
 @Component
 public class PurchaseInvoiceController implements Initializable {
@@ -61,15 +71,32 @@ public class PurchaseInvoiceController implements Initializable {
     @FXML private TextField txtLabour,txtMajuriRate,txtNetTotal,txtOther,txtPaid;
     @FXML private TextArea txtPartyInfo;
     @FXML private TextField txtPartyName,txtQuantity,txtRate,txtTotalMajuri,txtWeight;
+    @FXML private Button btnModAdd;
+    @FXML private Button btnModClear;
+    @FXML private Button btnModRemove;
+    @FXML private Button btnModUpdate;
+    @FXML private ComboBox<String> cmbModeMetal;
+    @FXML private ComboBox<String> cmbModePurity;
+    @FXML private TextField txtModeAmount, txtModeRate, txtModeWeight, txtModTotal;
+    @FXML private TableView<PurchaseMode> tableMod;
+    @FXML private TableColumn<PurchaseMode,Float> colModAmount;
+    @FXML private TableColumn<PurchaseMode,String> colModMetal;
+    @FXML private TableColumn<PurchaseMode,String> colModPurity;
+    @FXML private TableColumn<PurchaseMode,Float> colModRate;
+    @FXML private TableColumn<PurchaseMode,Float> colModWeight;
+    @FXML private TableColumn<PurchaseMode,Integer> colModeSr;
+
     @Autowired private PurchasePartyService partyService;
     @Autowired private ItemStockService stockService;
     @Autowired RateService rateService;
     @Autowired AlertNotification alert;
+    @Autowired private RawMetalService rawService;
     private PurchaseParty party;
 
     private SuggestionProvider<String> partyNameProvider;
     private  SuggestionProvider<String> itemNameProvider;
     private ObservableList<PurchaseTransaction>trList = FXCollections.observableArrayList();
+    private ObservableList<PurchaseMode>trModeList = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -77,6 +104,9 @@ public class PurchaseInvoiceController implements Initializable {
         date.setValue(LocalDate.now());
         cmbMetal.getItems().addAll(rateService.getMetalNames());
         cmbPurity.getItems().addAll(rateService.getPurityNames());
+        cmbModeMetal.getItems().addAll(rateService.getMetalNames());
+        cmbModePurity.getItems().addAll(rateService.getPurityNames());
+
         partyNameProvider = SuggestionProvider.create(partyService.getAllPartyNames());
         itemNameProvider = SuggestionProvider.create(stockService.getItemNames());
         new AutoCompletionTextFieldBinding<>(txtPartyName,partyNameProvider);
@@ -300,13 +330,100 @@ public class PurchaseInvoiceController implements Initializable {
                     String.valueOf(
                             (
                               Float.parseFloat(txtTotalMajuri.getText())/Float.parseFloat(txtWeight.getText())
-                            )/Float.parseFloat(txtQuantity.getText())
+                            )///Float.parseFloat(txtQuantity.getText())
                     )
             );
             calculateAmount();
             txtAmount.requestFocus();
         });
+        txtModeRate.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+                if (!t1.matches("\\d{0,100}([\\.]\\d{0,4})?"))
+                txtModeRate.setText(s);
+            }
+        });
+        txtModeWeight.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+                if (!t1.matches("\\d{0,100}([\\.]\\d{0,4})?"))
+                txtModeWeight.setText(s);
+            }
+        });
+        cmbModeMetal.setOnAction(e->{
+            if(cmbModePurity.getValue()!=null && !cmbModePurity.getValue().equals(""))
+            {
+
+                if(rawService.getByMetalAndPurity(cmbModeMetal.getValue(), cmbModePurity.getValue())!=null)
+                txtModeWeight.setText(
+                    String.valueOf(rawService.getByMetalAndPurity(cmbModeMetal.getValue(), cmbModePurity.getValue()).getWeight())
+                );
+            }
+        });
+        cmbModePurity.setOnAction(e->{
+            if(cmbModeMetal.getValue()!=null && !cmbModePurity.getValue().equals(""))
+            {
+
+                if(rawService.getByMetalAndPurity(cmbModeMetal.getValue(), cmbModePurity.getValue())!=null)
+                txtModeWeight.setText(
+                    String.valueOf(rawService.getByMetalAndPurity(cmbModeMetal.getValue(), cmbModePurity.getValue()).getWeight())
+                );
+            }
+        });
+        txtModeRate.setOnAction(e->{
+            if(txtModeWeight.getText().equals("")) txtModeWeight.setText(""+0.0f);
+            if(txtModeRate.getText().isEmpty()) return;
+
+            txtModeAmount.setText(String.valueOf(                
+            (Float.parseFloat(txtModeRate.getText())/10)* Float.parseFloat(txtModeWeight.getText())
+            )
+            );
+            txtModeAmount.requestFocus();
+        });
+        txtModeAmount.setOnAction(e->{
+            if(txtModeRate.getText().isEmpty()) txtModeRate.setText(""+0.0f);
+            if(txtModeWeight.getText().isEmpty()) txtModeWeight.setText(""+0.0f);
+            txtModeAmount.setText(String.valueOf(                
+            (Float.parseFloat(txtModeRate.getText())/10)* Float.parseFloat(txtModeWeight.getText()))
+            );
+            btnModAdd.requestFocus();
+        });
+        btnModAdd.setOnAction(e->addMode());
     }
+    private void addMode() {
+        try {
+            if(txtModeAmount.getText().isEmpty())
+            {
+                alert.showError("No data to save");
+                return;
+            }
+            if(txtModeWeight.getText().isEmpty()|| txtModeWeight.getText().equals(""+0.0f))
+            {
+                alert.showError("No Raw Metal available");
+                return;
+            }
+            if(cmbModeMetal.getValue()==null|| cmbModeMetal.getValue().equals(""))
+            {
+                alert.showError("Please Select Metal Name");
+                return;
+            }
+            if(cmbModePurity.getValue()==null|| cmbModePurity.getValue().equals(""))
+            {
+                alert.showError("Please Select Purity Name");
+                return;
+            }
+          RawMetal r=  rawService.getByMetalAndPurity(cmbModeMetal.getValue(), cmbModePurity.getValue());
+            if(r.getWeight()<Float.parseFloat(txtModeWeight.getText()))
+            {
+                alert.showError("Not Enough Metal Quantity\n Available Quantity= "+r.getWeight());
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     private void calculateAmount()
     {
         if(txtRate.getText().isEmpty()) txtRate.setText(""+0.0);

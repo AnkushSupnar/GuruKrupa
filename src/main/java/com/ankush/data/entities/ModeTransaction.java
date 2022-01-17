@@ -48,10 +48,4 @@ public class ModeTransaction {
     @JoinColumn(name = "modeid")
     private Mode mode;
 
-    @Column(name = "majurirate")
-    private Float majurirate;
-
-    @Column(name = "majuri")
-    private Float majuri;
-
 }

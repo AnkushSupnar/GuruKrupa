@@ -44,5 +44,9 @@ public class BillService {
     public List<Bill>getBillByCustomer(Long customerid){
         return repository.getByCustomerId(customerid);
     }
+    public Bill getById(Long id)
+    {
+        return repository.getById(id);
+    }
 
 }

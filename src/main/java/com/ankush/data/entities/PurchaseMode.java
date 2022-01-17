@@ -5,6 +5,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,18 +17,26 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
+@Table(name="purchasemode")
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
 @Setter
+@Getter
 @ToString
 @Builder
-public class RawMetalTransaction {
+public class PurchaseMode {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    
+
     private String metal;
     private String purity;
-    private float weight;
+    private Float weight;
+    private Float rate;
+    private Float amount;
+    @ManyToOne
+    @JoinColumn(name = "purchaseinvoiceid")
+    private PurchaseInvoice purchaseinvoice;
+
+    
 }

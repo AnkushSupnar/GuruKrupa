@@ -49,6 +49,9 @@ public class PurchaseInvoice {
     @OneToMany(mappedBy = "purchaseinvoice", orphanRemoval = true)
     private List<PurchaseTransaction> transactions = new ArrayList<>();
 
+    @OneToMany(mappedBy = "purchaseinvoice", orphanRemoval = true)
+    private List<PurchaseMode> modtransactions = new ArrayList<>();
+
     @ManyToOne
     @JoinColumn(name = "bankid")
     private Bank bank;

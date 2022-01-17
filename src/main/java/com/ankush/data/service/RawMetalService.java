@@ -18,17 +18,19 @@ public class RawMetalService {
     }
 
     public int saveRowMetal(RawMetal raw) {
-
-        if(raw.getId()==null)
+        if(getByMetalAndPurity(raw.getMetal(), raw.getPurity())==null)
         {
+            //not found
             repository.save(raw);
             return 1;
         }
         else{
-            raw.setWeight(repository.getById(raw.getId()).getWeight()+raw.getWeight());
-            repository.save(raw);
+            RawMetal r = getByMetalAndPurity(raw.getMetal(),raw.getPurity());
+            r.setWeight(r.getWeight()+raw.getWeight());
+            repository.save(r);
             return 2;
         }
+       
     }
     public RawMetal getByMetalAndPurity(String metal,String purity)
     {

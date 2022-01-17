@@ -1,31 +1,61 @@
 package com.ankush.controller.transaction;
 
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.ResourceBundle;
+
 import com.ankush.config.SpringFXMLLoader;
-import com.ankush.data.entities.*;
-import com.ankush.data.service.*;
+import com.ankush.data.entities.Bill;
+import com.ankush.data.entities.Customer;
+import com.ankush.data.entities.Mode;
+import com.ankush.data.entities.ModeTransaction;
+import com.ankush.data.entities.RawMetal;
+import com.ankush.data.entities.Transaction;
+import com.ankush.data.service.BankService;
+import com.ankush.data.service.BillService;
+import com.ankush.data.service.CustomerService;
+import com.ankush.data.service.ItemService;
+import com.ankush.data.service.ModeService;
+import com.ankush.data.service.RateService;
+import com.ankush.data.service.RawMetalService;
 import com.ankush.view.AlertNotification;
 import com.ankush.view.StageManager;
+import com.fasterxml.classmate.members.RawMember;
+
+import org.controlsfx.control.textfield.TextFields;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 import impl.org.controlsfx.autocompletion.SuggestionProvider;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
-import org.controlsfx.control.textfield.TextFields;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
-
-import java.net.URL;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 @Component
 public class BillingFramController implements Initializable {
@@ -58,22 +88,13 @@ public class BillingFramController implements Initializable {
     @FXML private TableColumn<Transaction, Float> colQty;
     @FXML private TableColumn<Transaction, Float> colMajuri;
     @FXML private TableColumn<Transaction, Float> colAmount;
-    @FXML private TextField txtTotalMajuri;
-    @FXML private TextField txtNetTotal;
-    @FXML private TextField txtGrandTotal;
-    @FXML private TextField txtModNo;
+    @FXML private TextField txtTotalMajuri,txtNetTotal,txtGrandTotal,txtModNo;
     @FXML private DatePicker dateMod;
     @FXML private TextField txtModeItemName;
     @FXML private ComboBox<String> cmbModMetal;
     @FXML private ComboBox<String> cmbModPurity;
-    @FXML private TextField txtModeRate;
-    @FXML private TextField txtModeWieght;
-    @FXML private TextField txtModeGhat;
-    @FXML private TextField txtModAmount;
-    @FXML private Button btnModeAdd;
-    @FXML private Button btnModeUpdate;
-    @FXML private Button btnModeRemove;
-    @FXML private Button btnModclear;
+    @FXML private TextField txtModeRate, txtModeWieght, txtModeGhat, txtModAmount;
+    @FXML private Button btnModeAdd, btnModeUpdate, btnModeRemove, btnModclear;
     @FXML private TableView<ModeTransaction> tableMod;
     @FXML private TableColumn<ModeTransaction, Long> colModSrno;
     @FXML private TableColumn<ModeTransaction,String> colModItemName;
@@ -84,14 +105,10 @@ public class BillingFramController implements Initializable {
     @FXML private TableColumn<ModeTransaction,Float> colModGhat;
     @FXML private TableColumn<ModeTransaction,Float> colModeFinalWeight;
     @FXML private TableColumn<ModeTransaction,Float> colModAmount;
-    @FXML private TextField txtModGrandTotal;
-    @FXML private TextField txtModNetTotal;
-    @FXML private TextField txtCustomer;
-    @FXML private Button btnSearchCustomer;
-    @FXML private Button btnAddCustomer;
+    @FXML private TextField txtModGrandTotal,txtModNetTotal,txtCustomer;
+    @FXML private Button btnSearchCustomer,btnAddCustomer;
     @FXML private TextArea txtCustomerInformation;
-    @FXML private RadioButton rdbtnCash;
-    @FXML private RadioButton rdbtnCredit;
+    @FXML private RadioButton rdbtnCash,rdbtnCredit;
 
     @FXML private ComboBox<String> cmbBank;
     @FXML private TextField txtBillAmount;
@@ -125,6 +142,7 @@ public class BillingFramController implements Initializable {
     @Autowired private BillService billService;
     @Autowired private ModeService modeService;
     @Autowired private AlertNotification alert;
+    @Autowired private RawMetalService rawService;
     private SuggestionProvider<String> customerNameProvide;
     private SuggestionProvider<String> itemNameProvide;
     private ObservableList<Transaction> trList = FXCollections.observableArrayList();
@@ -164,7 +182,33 @@ public class BillingFramController implements Initializable {
         txtBillNoSearch.setOnAction(e->searchByBillNo());
         txtCustomerSearch.setOnAction(e->searchByCustomer());
         btnSearchAll.setOnAction(e->searchAll());
+        btnAddCustomer.setOnAction(e->addCustomer(e));
     }
+    private void addCustomer(ActionEvent e) {
+        // stageManager.showAddNewParty(e,"/fxml/create/PurchaseParty.fxml");
+         Stage stage = new Stage();
+         Parent rootNode = null;
+         try {
+             rootNode = stageManager.getFxmlLoader().load("/fxml/create/AddCustomer.fxml");
+             Objects.requireNonNull(rootNode, "A Root FXML node must not be null");
+             stage.setScene(new Scene(rootNode));
+             stage.setTitle("Add New Customer");             
+             stage.initModality(Modality.WINDOW_MODAL);
+             stage.initOwner(((Node) e.getSource()).getScene().getWindow());
+             stage.show();
+             stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                 @Override
+                 public void handle(WindowEvent e) {
+                     customerNameProvide.clearSuggestions();
+                     customerNameProvide.addPossibleSuggestions(customerService.getAllCustomerNames());
+                 }
+             });
+         } catch (Exception exception) {
+            // logAndExit("Unable to load FXML view" + filePath, exception);
+         }
+ 
+ 
+     }
     private void clearBill() {
         id=null;
         modeid =null;
@@ -231,7 +275,22 @@ public class BillingFramController implements Initializable {
                 .modeno(txtModNo.getText())
                 .payby("Bill")
                 .build();
-        if(modeid!=null)mode.setId(modeid);
+        if(modeid!=null){
+            mode.setId(modeid);
+            //reducing previous raw metal
+            Mode oldMode = modeService.getModeByModeNo(txtModNo.getText());
+            for(ModeTransaction mtr:oldMode.getModTransactions())
+            {
+                RawMetal rm = RawMetal.builder()
+                .metal(mtr.getMetal())
+                .purity(mtr.getPurity())
+                .weight(mtr.getFinalweight()*(-1))
+                .build();
+                rawService.saveRowMetal(rm);
+            }
+
+            
+        }
         for(ModeTransaction tr:modetrList)
         {
            tr.setId(null);
@@ -256,7 +315,9 @@ public class BillingFramController implements Initializable {
         {
             bill.setModno("0");
         }
-        if(id!=null) bill.setId(id);
+        if(id!=null){ 
+            bill.setId(id);  
+        }
         else bill.setId(null);
         for(Transaction tr:trList)
         {
@@ -269,8 +330,8 @@ public class BillingFramController implements Initializable {
         {
             if(!txtModeTotalAmount.getText().equals(""+0.0)) {
                 modeService.saveMode(mode);
-            }
-            System.out.println("Saved id "+mode.getId());
+                saveRawMetal(mode.getModTransactions());
+            }                        
             alert.showSuccess("Bill Saved Success ");
             addInBIllList(bill);
             clearBill();
@@ -280,14 +341,26 @@ public class BillingFramController implements Initializable {
         {
             if(!txtModeTotalAmount.getText().equals(""+0.0)) {
                 modeService.saveMode(mode);
+                saveRawMetal(mode.getModTransactions());
             }
             alert.showSuccess("Bill update Success ");
             addInBIllList(bill);
             clearBill();
             return;
-        }
-        //System.out.println(bill);
+        }        
     }
+    private void saveRawMetal(List<ModeTransaction> modTransactions) {
+        for(ModeTransaction tr:modTransactions)
+        {
+            RawMetal rm = RawMetal.builder()
+            .metal(tr.getMetal())
+            .purity(tr.getPurity())
+            .weight(tr.getFinalweight())
+            .build();
+            rawService.saveRowMetal(rm);
+        }
+    }
+
     private void addInBIllList(Bill bill) {
         int index=-1;
         for(Bill b:billList)
@@ -811,6 +884,5 @@ public class BillingFramController implements Initializable {
         billList.clear();
         billList.addAll(billService.getAllBills());
     }
-
 
 }

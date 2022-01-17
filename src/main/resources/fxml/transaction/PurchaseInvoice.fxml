@@ -314,17 +314,17 @@
                            <children>
                               <ComboBox fx:id="cmbModeMetal" prefHeight="30.0" prefWidth="138.0" promptText="Metal Name" stylesheets="@../css/combobox.css" />
                               <ComboBox fx:id="cmbModePurity" prefHeight="30.0" prefWidth="91.0" promptText="Purity" stylesheets="@../css/combobox.css" />
-                              <TextField fx:id="txtModeRate" prefWidth="100.0">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </TextField>
                               <TextField fx:id="txtModeWeight" layoutX="356.0" layoutY="10.0" prefWidth="100.0">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </TextField>
-                              <TextField fx:id="txtModeAmount" layoutX="371.0" layoutY="10.0" prefWidth="100.0">
+                              <TextField fx:id="txtModeRate" prefWidth="100.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                              <TextField fx:id="txtModeAmount" editable="false" layoutX="371.0" layoutY="10.0" prefWidth="100.0">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -379,7 +379,7 @@
                           </columns>
                         </TableView>
                         <Label layoutX="488.0" layoutY="17.0" text="Amount" />
-                        <Label layoutX="265.0" layoutY="17.0" text="Rate/10gm" />
+                        <Label layoutX="265.0" layoutY="17.0" text="Weight(gm)" />
                      </children>
                   </AnchorPane>
             </content>
