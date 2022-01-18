@@ -121,14 +121,44 @@ public class PurchaseInvoiceController implements Initializable {
         colQty.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         colRate.setCellValueFactory(new PropertyValueFactory<>("rate"));
         tableTr.setItems(trList);
+
+        colModAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        colModMetal.setCellValueFactory(new PropertyValueFactory<>("metal"));
+        colModPurity.setCellValueFactory(new PropertyValueFactory<>("purity"));
+        colModRate.setCellValueFactory(new PropertyValueFactory<>("rate"));       
+        colModWeight.setCellValueFactory(new PropertyValueFactory<>("weight"));
+        colModeSr.setCellValueFactory(new PropertyValueFactory<>("id"));
+        tableMod.setItems(trModeList);
+       
+       
+
         btnSearch.setOnAction(e->searchParty());
         btnNew.setOnAction(e->showAddParty(e));
         setTextProperties();
         btnAdd.setOnAction(e->add());
         btnUpdate.setOnAction(e->update());
+        btnClear.setOnAction(e->clear());
+        btnRemove.setOnAction(e->remove());
     }
 
 
+    private void remove() {
+        if(tableTr.getSelectionModel().getSelectedItem()==null) return;
+        PurchaseTransaction tr = tableTr.getSelectionModel().getSelectedItem();
+        trList.remove(tableTr.getSelectionModel().getSelectedIndex());
+    }
+    private void clear() {
+        txtHsn.setText("");
+        txtAmount.setText(""+0.0f);
+        txtItemName.setText("");
+        cmbMetal.getSelectionModel().clearSelection();
+        cmbPurity.getSelectionModel().clearSelection();
+        txtRate.setText(""+0.0f);
+        txtWeight.setText(""+0.0f);
+        txtMajuriRate.setText(""+0.0f);
+        txtQuantity.setText(""+0.0f);
+        txtTotalMajuri.setText(""+0.0f);
+    }
     private void update() {
         if(tableTr.getSelectionModel().getSelectedItem()==null)return;
         PurchaseTransaction tr = tableTr.getSelectionModel().getSelectedItem();
@@ -143,8 +173,6 @@ public class PurchaseInvoiceController implements Initializable {
         
         
     }
-
-
     private void add() {
         if(!validate()) return;
         PurchaseTransaction tr = PurchaseTransaction.builder()
@@ -157,14 +185,10 @@ public class PurchaseInvoiceController implements Initializable {
                 .majurirate(Float.parseFloat(txtMajuriRate.getText()))
                 .metal(cmbMetal.getValue())
                 .purity(cmbPurity.getValue())
-                .build();
-        System.out.println(tr);
+                .build();        
         addInTrList(tr);
-
-
-
+        clear();
     }
-
     private void addInTrList(PurchaseTransaction tr) {
         int index=-1;
         for(PurchaseTransaction t:trList)
@@ -389,7 +413,10 @@ public class PurchaseInvoiceController implements Initializable {
             btnModAdd.requestFocus();
         });
         btnModAdd.setOnAction(e->addMode());
+        btnModUpdate.setOnAction(e->updateMode());
+        btnModClear.setOnAction(e->modeClear());
     }
+  
     private void addMode() {
         try {
             if(txtModeAmount.getText().isEmpty())
@@ -418,11 +445,75 @@ public class PurchaseInvoiceController implements Initializable {
                 alert.showError("Not Enough Metal Quantity\n Available Quantity= "+r.getWeight());
                 return;
             }
+            PurchaseMode purchaseMode = PurchaseMode.builder()
+            .amount(Float.parseFloat(txtModeAmount.getText()))
+            .metal(cmbModeMetal.getValue())
+            .purity(cmbModePurity.getValue())
+            .rate(Float.parseFloat(txtModeRate.getText()))
+            .weight(Float.parseFloat(txtModeWeight.getText()))
+            .build();
+            addInModeList(purchaseMode);
+            modeClear();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+    private void addInModeList(PurchaseMode purchaseMode) {
+        int index=-1;
+        for(PurchaseMode pmode:trModeList)
+        {
+            if(purchaseMode.getMetal().equalsIgnoreCase(pmode.getMetal())&&
+            purchaseMode.getPurity().equalsIgnoreCase(pmode.getPurity())&&
+            purchaseMode.getRate().equals(pmode.getRate()))
+            {
+                index = trModeList.indexOf(pmode);
+                break;
+            }
+        }
+        if(index==-1)
+        {
+            purchaseMode.setId(1);
+            trModeList.add(purchaseMode);
+            tableMod.refresh();
+            txtModTotal.setText(
+                String.valueOf(Float.parseFloat(txtModTotal.getText())+purchaseMode.getAmount())
+            );
+        }
+        else{
+            if(rawService.getByMetalAndPurity(purchaseMode.getMetal(), purchaseMode.getPurity()).getWeight()<
+            (trModeList.get(index).getWeight()+purchaseMode.getWeight()))
+            {
+                alert.showError("Not Enough Quantity Available ");
+                return;
+            }else{
+            trModeList.get(index).setAmount(trModeList.get(index).getAmount()+purchaseMode.getAmount());
+            trModeList.get(index).setWeight(trModeList.get(index).getWeight()+purchaseMode.getWeight());
+            tableMod.refresh();
+            txtModTotal.setText(
+                String.valueOf(Float.parseFloat(txtModTotal.getText())+purchaseMode.getAmount())
+            );
+            }
+        }
+       
 
+    }
+    private void updateMode() {
+        if(tableMod.getSelectionModel().getSelectedItem()==null) return;
+        PurchaseMode mode = tableMod.getSelectionModel().getSelectedItem();
+        cmbModeMetal.setValue(mode.getMetal());
+        cmbModePurity.setValue(mode.getPurity());
+        txtModeRate.setText(String.valueOf(mode.getRate()));
+        txtModeAmount.setText(String.valueOf(mode.getAmount()));
+        txtModeWeight.setText(String.valueOf(mode.getWeight()));
+
+    }
+    private void modeClear() {
+        cmbModeMetal.getSelectionModel().clearSelection();
+        cmbModePurity.getSelectionModel().clearSelection();
+        txtModeRate.setText(""+0.0f);
+        txtModeAmount.setText(""+0.0f);
+        txtModeWeight.setText(""+0.0f);
+    }
 
     private void calculateAmount()
     {
