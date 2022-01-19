@@ -1,6 +1,7 @@
 package com.ankush.data.entities;
 
 import lombok.*;
+import lombok.ToString.Exclude;
 
 import javax.persistence.*;
 
@@ -20,6 +21,7 @@ public class PurchaseTransaction {
 
     @ManyToOne
     @JoinColumn(name = "purchaseinvoiceid")
+   // @Exclude
     private PurchaseInvoice purchaseinvoice;
 
     @Column(name = "hsn")

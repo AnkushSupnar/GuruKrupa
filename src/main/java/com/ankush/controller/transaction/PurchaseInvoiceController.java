@@ -6,11 +6,18 @@ import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+import javax.swing.table.TableModel;
+
+import com.ankush.data.entities.Mode;
+import com.ankush.data.entities.ModeTransaction;
+import com.ankush.data.entities.PurchaseInvoice;
 import com.ankush.data.entities.PurchaseMode;
 import com.ankush.data.entities.PurchaseParty;
 import com.ankush.data.entities.PurchaseTransaction;
 import com.ankush.data.entities.RawMetal;
+import com.ankush.data.service.BankService;
 import com.ankush.data.service.ItemStockService;
+import com.ankush.data.service.PurchaseInvoiceService;
 import com.ankush.data.service.PurchasePartyService;
 import com.ankush.data.service.RateService;
 import com.ankush.data.service.RawMetalService;
@@ -52,7 +59,7 @@ public class PurchaseInvoiceController implements Initializable {
     @Lazy
     private StageManager stageManager;
     @FXML private Button btnAdd,btnClear,btnClearBill,btnHome,btnNew,btnRemove,btnSave,btnSearch,btnUpdate,btnUpdateBill;
-    @FXML private ComboBox<?> cmbBankName;
+    @FXML private ComboBox<String> cmbBankName;
     @FXML private ComboBox<String> cmbMetal;
     @FXML private ComboBox<String> cmbPurity;
     @FXML private TableView<PurchaseTransaction> tableTr;
@@ -88,9 +95,11 @@ public class PurchaseInvoiceController implements Initializable {
 
     @Autowired private PurchasePartyService partyService;
     @Autowired private ItemStockService stockService;
-    @Autowired RateService rateService;
-    @Autowired AlertNotification alert;
+    @Autowired private RateService rateService;
+    @Autowired private AlertNotification alert;
+    @Autowired private BankService bankService;
     @Autowired private RawMetalService rawService;
+    @Autowired private PurchaseInvoiceService purchaseService;
     private PurchaseParty party;
 
     private SuggestionProvider<String> partyNameProvider;
@@ -129,9 +138,6 @@ public class PurchaseInvoiceController implements Initializable {
         colModWeight.setCellValueFactory(new PropertyValueFactory<>("weight"));
         colModeSr.setCellValueFactory(new PropertyValueFactory<>("id"));
         tableMod.setItems(trModeList);
-       
-       
-
         btnSearch.setOnAction(e->searchParty());
         btnNew.setOnAction(e->showAddParty(e));
         setTextProperties();
@@ -139,12 +145,76 @@ public class PurchaseInvoiceController implements Initializable {
         btnUpdate.setOnAction(e->update());
         btnClear.setOnAction(e->clear());
         btnRemove.setOnAction(e->remove());
+        btnSave.setOnAction(e->save());
     }
+    private void save() {
+        if(!validateBill()) return;
+        PurchaseInvoice invoice = PurchaseInvoice.builder()
+        .bank(bankService.getByName(cmbBankName.getValue()))
+        .date(date.getValue())
+        .discount(Float.parseFloat(txtDiscount.getText()))
+        .grandtotal(Float.parseFloat(txtGrandTotal.getText()))
+        .invoiceno(txtInvoiceNo.getText())
+        .labourcharges(Float.parseFloat(txtLabour.getText()))
+        .nettotal(Float.parseFloat(txtNetTotal.getText()))
+        .othercharges(Float.parseFloat(txtOther.getText()))
+        .purchaseParty(partyService.getPartyByName(txtPartyName.getText()).get(0))
+        .build();
+       
+       for(PurchaseTransaction tr:trList)
+        {
+            tr.setId(null);
+            tr.setPurchaseinvoice(invoice);
+            invoice.getTransactions().add(tr);
+        }
+        for(PurchaseMode modeTr:trModeList)
+        {
+            modeTr.setId(null);
+            modeTr.setPurchaseinvoice(invoice);
+            invoice.getModtransactions().add(modeTr);
+        }
+        System.out.println(invoice);
+        int flag = purchaseService.save(invoice);
+        if(flag==1)
+        {
+            alert.showSuccess("Invoice Saved Success");
+        }
+    }
+    private boolean validateBill() {
+        if(txtInvoiceNo.getText().isEmpty())
+        {
+            alert.showError("Enter Party Invoice No");
+            txtInvoiceNo.requestFocus();
+            return false;
+        }
+        if(date.getValue()==null)
+        {
+            alert.showError("Enter Invoice Date");
+            date.requestFocus();
+            return false;
+        }
+        if(txtPartyInfo.getText().isEmpty())
+        {
+            alert.showError("Select Party Again");
+            txtPartyName.requestFocus();
+            return false;
+        }
+        if(trList.size()==0 && trModeList.size()==0)
+        {
+            alert.showError("No Data to Save");
+            return false;
+        }
+        if(cmbBankName.getValue()==null || cmbBankName.getValue().equals(""))
+        {
+            alert.showError("Select Bank Name");
+            cmbBankName.requestFocus();
+            return false;
+        }
 
-
+        return true;
+    }
     private void remove() {
-        if(tableTr.getSelectionModel().getSelectedItem()==null) return;
-        PurchaseTransaction tr = tableTr.getSelectionModel().getSelectedItem();
+        if(tableTr.getSelectionModel().getSelectedItem()==null) return;        
         trList.remove(tableTr.getSelectionModel().getSelectedIndex());
     }
     private void clear() {
@@ -273,6 +343,7 @@ public class PurchaseInvoiceController implements Initializable {
 
     }
     private void setTextProperties() {
+        cmbBankName.getItems().addAll(bankService.getAllBankNames());
         txtHsn.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
@@ -280,8 +351,10 @@ public class PurchaseInvoiceController implements Initializable {
                     txtHsn.setText(s);
                 }
                 else{
-                    itemNameProvider.clearSuggestions();
-                    itemNameProvider.addPossibleSuggestions(stockService.getItemNamesByHsn(Long.valueOf(txtHsn.getText())));
+                        if(!txtHsn.getText().isEmpty() ||!txtHsn.getText().equals("")){
+                        itemNameProvider.clearSuggestions();
+                        itemNameProvider.addPossibleSuggestions(stockService.getItemNamesByHsn(Long.valueOf(txtHsn.getText())));
+                    }
                 }
             }
         });
@@ -415,8 +488,10 @@ public class PurchaseInvoiceController implements Initializable {
         btnModAdd.setOnAction(e->addMode());
         btnModUpdate.setOnAction(e->updateMode());
         btnModClear.setOnAction(e->modeClear());
+        btnModRemove.setOnAction(e->removeMode());
     }
   
+    
     private void addMode() {
         try {
             if(txtModeAmount.getText().isEmpty())
@@ -478,6 +553,11 @@ public class PurchaseInvoiceController implements Initializable {
             txtModTotal.setText(
                 String.valueOf(Float.parseFloat(txtModTotal.getText())+purchaseMode.getAmount())
             );
+            txtGrandTotal.setText(
+                String.valueOf(
+                    Float.parseFloat(txtGrandTotal.getText())-purchaseMode.getAmount()
+                )
+            );
         }
         else{
             if(rawService.getByMetalAndPurity(purchaseMode.getMetal(), purchaseMode.getPurity()).getWeight()<
@@ -491,6 +571,11 @@ public class PurchaseInvoiceController implements Initializable {
             tableMod.refresh();
             txtModTotal.setText(
                 String.valueOf(Float.parseFloat(txtModTotal.getText())+purchaseMode.getAmount())
+            );
+            txtGrandTotal.setText(
+                String.valueOf(
+                    Float.parseFloat(txtGrandTotal.getText())-purchaseMode.getAmount()
+                )
             );
             }
         }
@@ -514,7 +599,17 @@ public class PurchaseInvoiceController implements Initializable {
         txtModeAmount.setText(""+0.0f);
         txtModeWeight.setText(""+0.0f);
     }
-
+    private void removeMode() {
+        if(tableMod.getSelectionModel().getSelectedItem()==null) return;
+        PurchaseMode mode = tableMod.getSelectionModel().getSelectedItem();
+        txtModTotal.setText(String.valueOf(
+            Float.parseFloat(txtModTotal.getText())-mode.getAmount()
+        ));
+        txtGrandTotal.setText(String.valueOf(
+            Float.parseFloat(txtGrandTotal.getText())+mode.getAmount()
+        ));
+        trModeList.remove(tableMod.getSelectionModel().getSelectedIndex());
+    }
     private void calculateAmount()
     {
         if(txtRate.getText().isEmpty()) txtRate.setText(""+0.0);

@@ -73,7 +73,7 @@
                   <FontAwesomeIcon fill="#8cbcf3" glyphName="INFO_CIRCLE" />
                </graphic>
             </Label>
-            <TextArea fx:id="txtPartyInfo" layoutX="10.0" layoutY="90.0" prefHeight="92.0" prefWidth="623.0" />
+            <TextArea fx:id="txtPartyInfo" editable="false" layoutX="10.0" layoutY="90.0" prefHeight="92.0" prefWidth="623.0" />
          </children>
       </Pane>
       <Pane layoutX="5.0" layoutY="581.0" prefHeight="156.0" prefWidth="644.0" styleClass="box" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0">

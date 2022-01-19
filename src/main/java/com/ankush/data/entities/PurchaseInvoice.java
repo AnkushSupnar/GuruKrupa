@@ -47,9 +47,11 @@ public class PurchaseInvoice {
     private Float grandtotal;
 
     @OneToMany(mappedBy = "purchaseinvoice", orphanRemoval = true)
+    @Builder.Default
     private List<PurchaseTransaction> transactions = new ArrayList<>();
 
     @OneToMany(mappedBy = "purchaseinvoice", orphanRemoval = true)
+    @Builder.Default
     private List<PurchaseMode> modtransactions = new ArrayList<>();
 
     @ManyToOne

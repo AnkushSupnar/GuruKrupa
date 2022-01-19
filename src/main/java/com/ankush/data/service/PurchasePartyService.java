@@ -1,13 +1,12 @@
 package com.ankush.data.service;
 
+import java.util.List;
+
 import com.ankush.data.entities.PurchaseParty;
 import com.ankush.data.repository.PurchasePartyRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.stylesheets.LinkStyle;
-
-import java.util.Collections;
-import java.util.List;
 
 @Service
 public class PurchasePartyService {

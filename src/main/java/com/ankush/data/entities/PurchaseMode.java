@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.ToString.Exclude;
 
 @Entity
 @Table(name="purchasemode")
@@ -36,6 +37,7 @@ public class PurchaseMode {
     private Float amount;
     @ManyToOne
     @JoinColumn(name = "purchaseinvoiceid")
+   // @Exclude
     private PurchaseInvoice purchaseinvoice;
 
     
