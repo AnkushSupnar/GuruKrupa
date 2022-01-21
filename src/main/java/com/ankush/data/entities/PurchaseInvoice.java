@@ -46,11 +46,14 @@ public class PurchaseInvoice {
     @Column(name = "grandtotal")
     private Float grandtotal;
 
-    @OneToMany(mappedBy = "purchaseinvoice", orphanRemoval = true)
+    @Column(name = "paid")
+    private Float paid;
+
+    @OneToMany(mappedBy = "purchaseinvoice",cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<PurchaseTransaction> transactions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "purchaseinvoice", orphanRemoval = true)
+    @OneToMany(mappedBy = "purchaseinvoice",cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<PurchaseMode> modtransactions = new ArrayList<>();
 

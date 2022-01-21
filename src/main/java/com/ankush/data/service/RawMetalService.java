@@ -39,7 +39,9 @@ public class RawMetalService {
     public int reduceWeight(RawMetal raw)
     {
 
-        raw.setWeight(repository.getById(raw.getId()).getWeight()-raw.getWeight());
+       
+        raw.setWeight(getByMetalAndPurity(raw.getMetal(),raw.getPurity()).getWeight()-raw.getWeight());
+    
         repository.save(raw);
         return 1;
     }

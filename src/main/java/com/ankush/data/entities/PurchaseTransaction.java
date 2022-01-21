@@ -51,4 +51,7 @@ public class PurchaseTransaction {
     @Column(name = "amount")
     private Float amount;
 
+    @Column(name="weight")
+    private Float weight;
+
 }

@@ -8,6 +8,8 @@ import java.util.ResourceBundle;
 
 import javax.swing.table.TableModel;
 
+import com.ankush.data.entities.Item;
+import com.ankush.data.entities.ItemStock;
 import com.ankush.data.entities.Mode;
 import com.ankush.data.entities.ModeTransaction;
 import com.ankush.data.entities.PurchaseInvoice;
@@ -16,6 +18,7 @@ import com.ankush.data.entities.PurchaseParty;
 import com.ankush.data.entities.PurchaseTransaction;
 import com.ankush.data.entities.RawMetal;
 import com.ankush.data.service.BankService;
+import com.ankush.data.service.ItemService;
 import com.ankush.data.service.ItemStockService;
 import com.ankush.data.service.PurchaseInvoiceService;
 import com.ankush.data.service.PurchasePartyService;
@@ -30,6 +33,7 @@ import org.springframework.stereotype.Component;
 
 import impl.org.controlsfx.autocompletion.AutoCompletionTextFieldBinding;
 import impl.org.controlsfx.autocompletion.SuggestionProvider;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -68,6 +72,7 @@ public class PurchaseInvoiceController implements Initializable {
     @FXML private TableColumn<PurchaseTransaction,String> colItemName;
     @FXML private TableColumn<PurchaseTransaction,Float> colMajuri;
     @FXML private TableColumn<PurchaseTransaction,String> colMetal;
+    @FXML private TableColumn<PurchaseTransaction, Float> colWeight;
     @FXML private TableColumn<PurchaseTransaction,Long> colNo;
     @FXML private TableColumn<PurchaseTransaction,String> colPurity;
     @FXML private TableColumn<PurchaseTransaction,Float> colQty;
@@ -93,12 +98,28 @@ public class PurchaseInvoiceController implements Initializable {
     @FXML private TableColumn<PurchaseMode,Float> colModWeight;
     @FXML private TableColumn<PurchaseMode,Integer> colModeSr;
 
+    @FXML private TableView<PurchaseInvoice> tableInvoice;
+    @FXML private TableColumn<PurchaseInvoice,Float> colBillAmount;
+    @FXML private TableColumn<PurchaseInvoice,LocalDate> colBillDate;
+    @FXML private TableColumn<PurchaseInvoice,String> colBillInvoice;
+    @FXML private TableColumn<PurchaseInvoice,Long> colBillNo;
+    @FXML private TableColumn<PurchaseInvoice,Float> colBillPaid;
+    @FXML private TableColumn<PurchaseInvoice,String> colBillParty;
+
+    @FXML private TextField txtInvoiceIdSearch;
+    @FXML private TextField txtInvoiceNoSearch;
+    @FXML private DatePicker dateSearch;
+    @FXML private Button btnShowAll;
+
+
+
     @Autowired private PurchasePartyService partyService;
     @Autowired private ItemStockService stockService;
     @Autowired private RateService rateService;
     @Autowired private AlertNotification alert;
     @Autowired private BankService bankService;
     @Autowired private RawMetalService rawService;
+    @Autowired private ItemService itemService;
     @Autowired private PurchaseInvoiceService purchaseService;
     private PurchaseParty party;
 
@@ -106,6 +127,7 @@ public class PurchaseInvoiceController implements Initializable {
     private  SuggestionProvider<String> itemNameProvider;
     private ObservableList<PurchaseTransaction>trList = FXCollections.observableArrayList();
     private ObservableList<PurchaseMode>trModeList = FXCollections.observableArrayList();
+    private ObservableList<PurchaseInvoice>invoiceList = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -127,6 +149,7 @@ public class PurchaseInvoiceController implements Initializable {
         colMetal.setCellValueFactory(new PropertyValueFactory<>("metal"));
         colNo.setCellValueFactory(new PropertyValueFactory<>("id"));
         colPurity.setCellValueFactory(new PropertyValueFactory<>("purity"));
+        colWeight.setCellValueFactory(new PropertyValueFactory<>("weight"));
         colQty.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         colRate.setCellValueFactory(new PropertyValueFactory<>("rate"));
         tableTr.setItems(trList);
@@ -138,6 +161,16 @@ public class PurchaseInvoiceController implements Initializable {
         colModWeight.setCellValueFactory(new PropertyValueFactory<>("weight"));
         colModeSr.setCellValueFactory(new PropertyValueFactory<>("id"));
         tableMod.setItems(trModeList);
+       
+        colBillAmount.setCellValueFactory(new PropertyValueFactory<>("grandtotal"));
+        colBillInvoice.setCellValueFactory(new PropertyValueFactory<>("invoiceno"));
+        colBillDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+        colBillPaid.setCellValueFactory(new PropertyValueFactory<>("paid"));
+        colBillNo.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colBillParty.setCellValueFactory(celldata->new SimpleStringProperty(celldata.getValue().getPurchaseParty().getName()));
+        invoiceList.addAll(purchaseService.getAllInvoice());
+        tableInvoice.setItems(invoiceList);
+
         btnSearch.setOnAction(e->searchParty());
         btnNew.setOnAction(e->showAddParty(e));
         setTextProperties();
@@ -159,13 +192,16 @@ public class PurchaseInvoiceController implements Initializable {
         .nettotal(Float.parseFloat(txtNetTotal.getText()))
         .othercharges(Float.parseFloat(txtOther.getText()))
         .purchaseParty(partyService.getPartyByName(txtPartyName.getText()).get(0))
+        .paid(Float.parseFloat(txtPaid.getText()))
         .build();
        
        for(PurchaseTransaction tr:trList)
         {
             tr.setId(null);
             tr.setPurchaseinvoice(invoice);
+            System.out.println(tr);
             invoice.getTransactions().add(tr);
+           
         }
         for(PurchaseMode modeTr:trModeList)
         {
@@ -173,10 +209,38 @@ public class PurchaseInvoiceController implements Initializable {
             modeTr.setPurchaseinvoice(invoice);
             invoice.getModtransactions().add(modeTr);
         }
-        System.out.println(invoice);
+       
+       // System.out.println(invoice);
         int flag = purchaseService.save(invoice);
         if(flag==1)
         {
+            for(PurchaseMode mode:invoice.getModtransactions())
+            {
+                RawMetal raw = rawService.getByMetalAndPurity(mode.getMetal(), mode.getPurity());
+                raw.setWeight(mode.getWeight());
+                rawService.reduceWeight(raw);
+            }
+            //save item stock
+            for(PurchaseTransaction tr:invoice.getTransactions())
+            {
+
+                Item item = Item.builder()
+                .hsn(tr.getHsn())
+                .itemname(tr.getItemname())
+                .metal(tr.getMetal())
+                .purity(tr.getPurity())
+                .majurirate(0f)
+                .build();
+                itemService.save(item);
+               
+                ItemStock stock = ItemStock.builder()
+                .item(item)
+                .purchaserate(tr.getRate())
+                .quantity(tr.getQuantity())
+                .weight(tr.getWeight())
+                .build();
+                stockService.saveItemStock(stock);                
+            }
             alert.showSuccess("Invoice Saved Success");
         }
     }
@@ -210,12 +274,29 @@ public class PurchaseInvoiceController implements Initializable {
             cmbBankName.requestFocus();
             return false;
         }
+        if(txtPaid.getText().isEmpty())
+        {
+            txtPaid.setText(""+0.0f);
+        }
 
         return true;
     }
     private void remove() {
         if(tableTr.getSelectionModel().getSelectedItem()==null) return;        
+        PurchaseTransaction tr = tableTr.getSelectionModel().getSelectedItem();
+        txtNetTotal.setText(
+            String.valueOf(
+                Float.parseFloat(txtNetTotal.getText())-(tr.getAmount()-tr.getMajuri())
+            )
+        );
+        txtLabour.setText(
+            String.valueOf(
+                Float.parseFloat(txtLabour.getText())-tr.getMajuri()
+            )
+        );
+        calculateGrandTotal();
         trList.remove(tableTr.getSelectionModel().getSelectedIndex());
+
     }
     private void clear() {
         txtHsn.setText("");
@@ -255,6 +336,7 @@ public class PurchaseInvoiceController implements Initializable {
                 .majurirate(Float.parseFloat(txtMajuriRate.getText()))
                 .metal(cmbMetal.getValue())
                 .purity(cmbPurity.getValue())
+                .weight(Float.parseFloat(txtWeight.getText()))
                 .build();        
         addInTrList(tr);
         clear();
@@ -403,6 +485,13 @@ public class PurchaseInvoiceController implements Initializable {
                     txtOther.setText(s);
             }
         });
+        txtPaid.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+                if (!t1.matches("\\d{0,100}([\\.]\\d{0,4})?"))
+                txtPaid.setText(s);
+            }
+        });
         txtDiscount.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
@@ -489,6 +578,40 @@ public class PurchaseInvoiceController implements Initializable {
         btnModUpdate.setOnAction(e->updateMode());
         btnModClear.setOnAction(e->modeClear());
         btnModRemove.setOnAction(e->removeMode());
+
+        txtOther.setOnAction(e->calculateGrandTotal());
+        txtDiscount.setOnAction(e->calculateGrandTotal());
+        txtInvoiceIdSearch.setOnAction(e->{
+            if(purchaseService.getById(Long.parseLong(txtInvoiceIdSearch.getText()))!=null)
+            {
+            invoiceList.clear();
+            invoiceList.add(purchaseService.getById(Long.parseLong(txtInvoiceIdSearch.getText())));
+            tableInvoice.refresh();
+            }
+        });
+        txtInvoiceIdSearch.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+                if (!t1.matches("\\d{0,100}([\\.]\\d{0,4})?"))
+                txtInvoiceIdSearch.setText(s);
+            }
+        });
+
+        dateSearch.setOnAction(e->{
+            invoiceList.clear();
+            invoiceList.addAll(purchaseService.getByDate(dateSearch.getValue()));
+            tableInvoice.refresh();
+        });
+        txtInvoiceNoSearch.setOnAction(e->{
+            invoiceList.clear();
+            invoiceList.addAll(purchaseService.getByInvoiceno(txtInvoiceNoSearch.getText()));
+            tableInvoice.refresh();
+        });
+        btnShowAll.setOnAction(e->{
+            invoiceList.clear();
+            invoiceList.addAll(purchaseService.getAllInvoice());
+            tableInvoice.refresh();
+        });
     }
   
     
@@ -553,11 +676,13 @@ public class PurchaseInvoiceController implements Initializable {
             txtModTotal.setText(
                 String.valueOf(Float.parseFloat(txtModTotal.getText())+purchaseMode.getAmount())
             );
+            System.out.println(purchaseMode.getAmount());
             txtGrandTotal.setText(
                 String.valueOf(
                     Float.parseFloat(txtGrandTotal.getText())-purchaseMode.getAmount()
                 )
             );
+           
         }
         else{
             if(rawService.getByMetalAndPurity(purchaseMode.getMetal(), purchaseMode.getPurity()).getWeight()<
@@ -577,9 +702,10 @@ public class PurchaseInvoiceController implements Initializable {
                     Float.parseFloat(txtGrandTotal.getText())-purchaseMode.getAmount()
                 )
             );
+           
             }
         }
-       
+        calculateGrandTotal();
 
     }
     private void updateMode() {
@@ -655,7 +781,8 @@ public class PurchaseInvoiceController implements Initializable {
                 String.valueOf(Float.parseFloat(txtNetTotal.getText())+
                         Float.parseFloat(txtLabour.getText())+
                         Float.parseFloat(txtOther.getText())-
-                        Float.parseFloat(txtDiscount.getText()))
+                        Float.parseFloat(txtDiscount.getText())-
+                        Float.parseFloat(txtModTotal.getText()))
         );
 
     }

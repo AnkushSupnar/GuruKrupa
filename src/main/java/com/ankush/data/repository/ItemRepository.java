@@ -15,6 +15,8 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     @Query("select itemname from Item order by itemname")
     List<String>findAllItemNames();
+    
+    Item findByHsnAndItemnameAndMetalAndPurity(Long hsn,String itemname,String metal,String purity);
 
 
 

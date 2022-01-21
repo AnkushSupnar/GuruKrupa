@@ -36,4 +36,24 @@ public class ItemStockService {
     {
       return repository.findByItem_Hsn(hsn).stream().map(e->e.getItem().getItemname()).collect(Collectors.toList());
     }
+    public ItemStock getItemStockByItemId(Long id)
+    {
+        return repository.findByItem_id(id);
+    }
+    public int saveItemStock(ItemStock stock)    
+    {
+        ItemStock oldStock = getItemStockByItemId(stock.getItem().getId());
+        if(oldStock==null)
+        {
+            repository.save(stock);
+            return 1;
+        }
+        else{
+            oldStock.setPurchaserate(stock.getPurchaserate());
+            oldStock.setQuantity(oldStock.getQuantity()+stock.getQuantity());
+            oldStock.setWeight(oldStock.getWeight()+stock.getWeight());
+            repository.save(oldStock);
+            return 2;
+        }
+    }
 }
